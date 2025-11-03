@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Database\" />
+    <Folder Include="Entity\" />
+    <Folder Include="Enum\" />
+    <Folder Include="Repo\Abstraction\" />
+    <Folder Include="Repo\Implementation\" />
+    <Folder Include="SP\" />
+  </ItemGroup>
+
 </Project>
