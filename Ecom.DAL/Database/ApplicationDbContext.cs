@@ -31,6 +31,8 @@ namespace Ecom.DAL.Database
 
 
 
+        public DbSet<Brand> Brands { get; set; }
+
 
     }
 }
