@@ -4,10 +4,10 @@ namespace Ecom.DAL.Entity
     public class Address
     {
         public int Id { get; private set; }
-        public string Street { get; private set; } = string.Empty;
-        public string City { get; private set; } = string.Empty;
-        public string Country { get; private set; } = string.Empty;
-        public string PostalCode { get; private set; } = string.Empty;
+        public string Street { get; private set; } = null!;
+        public string City { get; private set; } = null!;
+        public string Country { get; private set; } = null!;
+        public string PostalCode { get; private set; } = null!;
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
         public DateTime? DeletedOn { get; private set; }
@@ -17,10 +17,10 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
-        public string AppUserId { get; private set; } = string.Empty;
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
-        public virtual AppUser AppUser { get; private set; } = new AppUser();
+        public virtual AppUser AppUser { get; private set; } = null!;
 
         // Logic
         public Address() { }

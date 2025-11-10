@@ -3,12 +3,11 @@ namespace Ecom.DAL.Entity
 {
     public class Order
     {
-        [Key]
         public int Id { get; private set; }
         public DateTime DeliveryDate { get; private set; }
         public OrderStatus Status { get; private set; } // Enum
-        public decimal TotalAmount { get; private set; }
-        public string? ShippingAddress { get; private set; }
+        public decimal TotalAmount { get; private set; } // Set by RecalculateTotal()
+        public string ShippingAddress { get; private set; } = null!;
         public string? TrackingNumber { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
@@ -17,21 +16,20 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
-        [ForeignKey("AppUser")]
-        public string? AppUserId { get; private set; }
-        [ForeignKey("Payment")]
-        public int? PaymentId { get; private set; }
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
-        public virtual AppUser? AppUser { get; private set; }
+        public virtual AppUser AppUser { get; private set; } = null!;
         public virtual Payment? Payment { get; private set; }
         public virtual ICollection<OrderItem>? OrderItems { get; private set; }
 
         // Logic
-        public Order() { }
+        public Order() 
+        {
+            OrderItems = new List<OrderItem>();
+        }
 
-        public Order(string appUserId, DateTime deliveryDate, string shippingAddress,string createdBy,
-            string trackingNumber, int paymentId)
+        public Order(string appUserId, DateTime deliveryDate, string shippingAddress,string createdBy)
         {
             AppUserId = appUserId;
             Status = OrderStatus.Pending;
@@ -40,12 +38,11 @@ namespace Ecom.DAL.Entity
             CreatedBy = createdBy;
             CreatedOn = DateTime.UtcNow;
             IsDeleted = false;
-            TrackingNumber = trackingNumber;
-            PaymentId = paymentId;
+            TotalAmount = 0;
             OrderItems = new List<OrderItem>();
         }
 
-        public bool Update(OrderStatus orderStatus, string userModified, string trackingNumber, int paymentId)
+        public bool Update(OrderStatus orderStatus, string userModified, string? trackingNumber)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
@@ -53,7 +50,6 @@ namespace Ecom.DAL.Entity
                 UpdatedBy = userModified;
                 UpdatedOn = DateTime.UtcNow;
                 TrackingNumber = trackingNumber;
-                PaymentId = paymentId;
                 return true;
             }
             return false;

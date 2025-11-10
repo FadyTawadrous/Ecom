@@ -4,7 +4,7 @@ namespace Ecom.DAL.Entity
     public class Category
     {
         public int Id { get; private set; }
-        public string Name { get; private set; } = string.Empty;
+        public string Name { get; private set; } = null!;
         public string? ImageUrl { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }

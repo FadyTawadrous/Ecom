@@ -3,11 +3,10 @@ namespace Ecom.DAL.Entity
 {
     public class Payment
     {
-        [Key]
         public int Id { get; private set; }
         public PaymentMethod? PaymentMethod { get; private set; } // Enum: Cash, Card, Paypal
         public PaymentStatus Status { get; private set; } // Enum: Pending, Completed, Failed
-        public decimal TotalAmount { get; private set; }
+        public decimal TotalAmount { get; private set; } // Set at creation, immutable
         public string? TransactionId { get; private set; } // From gateway
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
@@ -16,11 +15,8 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
-        [ForeignKey("Order")]
-        public int? OrderId { get; private set; }
-
-        // Navigation Properties
-        public virtual Order? Order { get; private set; }
+        public int OrderId { get; private set; }
+        public virtual Order Order { get; private set; } = null!;
 
         // Logic
         public Payment() { }
@@ -37,18 +33,14 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
         }
 
-        public bool Update(int orderId, decimal totalamount, PaymentMethod paymentMethod, string? transactionId,
-            string userModified, PaymentStatus paymentStatus)
+        public bool Update(string? transactionId, string userModified, PaymentStatus paymentStatus)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
                 Status = paymentStatus;
-                PaymentMethod = paymentMethod;
                 UpdatedBy = userModified;
                 UpdatedOn = DateTime.UtcNow;
                 TransactionId = transactionId;
-                OrderId = orderId;
-                TotalAmount = totalamount;
                 return true;
             }
             return false;

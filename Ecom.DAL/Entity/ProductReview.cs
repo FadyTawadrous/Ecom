@@ -3,10 +3,9 @@ namespace Ecom.DAL.Entity
 {
     public class ProductReview
     {
-        [Key]
         public int Id { get; private set; }
-        public string? Title { get; private set; }
-        public string? Description { get; private set; }
+        public string Title { get; private set; } = null!;
+        public string Description { get; private set; } = null!;
         public decimal Rating { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
@@ -17,15 +16,12 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
-        [ForeignKey("Product")]
         public int ProductId { get; private set; }
-
-        [ForeignKey("AppUser")]
-        public string AppUserId { get; private set; }
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
-        public virtual Product? Product { get; private set; }
-        public virtual AppUser? AppUser { get; private set; }
+        public virtual Product Product { get; private set; } = null!;
+        public virtual AppUser AppUser { get; private set; } = null!;
 
         // Logic
         public ProductReview() { }
