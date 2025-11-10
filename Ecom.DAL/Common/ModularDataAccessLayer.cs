@@ -1,4 +1,9 @@
 ﻿
+using Azure.Core;
+using Ecom.DAL.Repo.Abstraction;
+using Ecom.DAL.Repository.Implementation;
+using Tiers.DAL.Repo.Implementation;
+
 namespace Ecom.DAL.Common
 {
     public static class ModularDataAccessLayer
@@ -42,7 +47,11 @@ namespace Ecom.DAL.Common
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders(); // Add all default token providers
-                //.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+                                             //.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+
+            services.AddScoped<IProductImageUrlRepo, ProductImageUrlRepo>();
+            //Dependency injection s oWhen a controller or service asks for an IProductImageUrlRepo,
+            // give them a new ProductImageUrlRepo instance for each HTTP request.
 
             return services;
         }

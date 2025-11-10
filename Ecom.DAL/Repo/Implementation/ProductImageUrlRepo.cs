@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Ecom.DAL.Entity;
 using Microsoft.EntityFrameworkCore;
 using Ecom.DAL.Repo.Abstraction;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Diagnostics.Metrics;
 
 namespace Ecom.DAL.Repository.Implementation
 {
@@ -68,6 +70,9 @@ namespace Ecom.DAL.Repository.Implementation
                 var result = await _db.ProductImageUrls.AddAsync(newImage);
                 await _db.SaveChangesAsync();
                 return result.Entity.Id > 0;
+
+               // After saving, EF automatically fills Id(primary key).
+               //If it’s greater than 0 → insertion succeeded.
             }
             catch (Exception)
             {
