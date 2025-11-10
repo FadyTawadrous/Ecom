@@ -1,5 +1,4 @@
-﻿
-namespace Ecom.DAL.Entity
+﻿namespace Ecom.DAL.Entity
 {
     public class Address
     {
@@ -10,11 +9,11 @@ namespace Ecom.DAL.Entity
         public string? Country { get; private set; }
         public string? PostalCode { get; private set; }
         public string? CreatedBy { get; private set; }
-        public DateTime CreatedOn { get; private set; }
-        public DateTime? DeletedOn { get; private set; }
-        public string? DeletedBy { get; private set; }
-        public DateTime? UpdatedOn { get; private set; }
+        public DateTime CreatedOn { get; private set; }        
         public string? UpdatedBy { get; private set; }
+        public DateTime? UpdatedOn { get; private set; }
+        public string? DeletedBy { get; private set; }
+        public DateTime? DeletedOn { get; private set; }
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
@@ -40,32 +39,32 @@ namespace Ecom.DAL.Entity
         }
 
         public bool Update(string street, string city, string country, string postalCode,
-            string appUserId, string userModified)
+            string appUserId, string updatedBy)
         {
-            if (!string.IsNullOrEmpty(userModified))
+            if (!string.IsNullOrEmpty(updatedBy))
             {
                 Street = street;
                 City = city;
                 Country = country;
                 PostalCode = postalCode;
-                AppUserId = appUserId;
+                AppUserId = appUserId;                
+                UpdatedBy = updatedBy;
                 UpdatedOn = DateTime.UtcNow;
-                UpdatedBy = userModified;
-                return true;
-            }
-            return false;
-        }
-        public bool ToggleDelete(string userModified)
-        {
-            if (!string.IsNullOrEmpty(userModified))
-            {
-                IsDeleted = !IsDeleted;
-                DeletedOn = DateTime.UtcNow;
-                DeletedBy = userModified;
                 return true;
             }
             return false;
         }
 
+        public bool ToggleDelete(string deletedBy)
+        {
+            if (!string.IsNullOrEmpty(deletedBy))
+            {
+                IsDeleted = !IsDeleted;
+                DeletedBy = deletedBy;
+                DeletedOn = DateTime.UtcNow;                
+                return true;
+            }
+            return false;
+        }
     }
 }

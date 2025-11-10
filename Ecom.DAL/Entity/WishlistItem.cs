@@ -6,11 +6,11 @@ namespace Ecom.DAL.Entity
         [Key]
         public int Id { get; private set; }
         public string? CreatedBy { get; private set; }
-        public DateTime CreatedOn { get; private set; }
-        public DateTime? DeletedOn { get; private set; }
-        public string? DeletedBy { get; private set; }
-        public DateTime? UpdatedOn { get; private set; }
+        public DateTime CreatedOn { get; private set; }      
         public string? UpdatedBy { get; private set; }
+        public DateTime? UpdatedOn { get; private set; }
+        public string? DeletedBy { get; private set; }
+        public DateTime? DeletedOn { get; private set; }
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
@@ -35,29 +35,29 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
         }
 
-        public bool Update(string appUserId, int productId, string userModified)
+        public bool Update(string appUserId, int productId, string updatedBy) // can be removed
         {
-            if (!string.IsNullOrEmpty(userModified))
+            if (!string.IsNullOrEmpty(updatedBy))
             {
                 AppUserId = appUserId;
                 ProductId = productId;
                 UpdatedOn = DateTime.UtcNow;
-                UpdatedBy = userModified;
-                return true;
-            }
-            return false;
-        }
-        public bool ToggleDelete(string userModified)
-        {
-            if (!string.IsNullOrEmpty(userModified))
-            {
-                IsDeleted = !IsDeleted;
-                DeletedOn = DateTime.UtcNow;
-                DeletedBy = userModified;
+                UpdatedBy = updatedBy;
                 return true;
             }
             return false;
         }
 
+        public bool ToggleDelete(string deletedBy)
+        {
+            if (!string.IsNullOrEmpty(deletedBy))
+            {
+                IsDeleted = !IsDeleted;
+                DeletedOn = DateTime.UtcNow;
+                DeletedBy = deletedBy;
+                return true;
+            }
+            return false;
+        }
     }
 }

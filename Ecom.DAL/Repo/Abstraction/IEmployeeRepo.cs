@@ -1,5 +1,4 @@
-﻿
-namespace Tiers.DAL.Repo.Abstraction
+﻿namespace Tiers.DAL.Repo.Abstraction
 {
     public interface IEmployeeRepo
     {
