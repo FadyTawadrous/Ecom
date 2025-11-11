@@ -28,11 +28,6 @@ namespace Ecom.DAL.Database
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<WishlistItem> WishlistItems { get; set; }
-
-
-
         public DbSet<Brand> Brands { get; set; }
-
-
     }
 }
