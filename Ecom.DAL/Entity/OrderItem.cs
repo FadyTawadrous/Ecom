@@ -3,11 +3,13 @@ namespace Ecom.DAL.Entity
 {
     public class OrderItem
     {
-        [Key]
         public int Id { get; private set; }
         public int Quantity { get; private set; }
         public decimal UnitPrice { get; private set; }
         public decimal TotalPrice { get; private set; }
+        // Snapshot the title, so if the original Product.Title changes,
+        // this order's history is not affected.
+        public string ProductTitle { get; private set; } = null!;
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
         public DateTime? DeletedOn { get; private set; }
@@ -17,20 +19,18 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foreign Keys
-        [ForeignKey("Order")]
         public int OrderId { get; private set; }
-
-        [ForeignKey("Product")]
         public int ProductId { get; private set; }
 
         // Navigation Properties
-        public virtual Order? Order { get; private set; }
-        public virtual Product? Product { get; private set; }
+        public virtual Order Order { get; private set; } = null! ;
+        public virtual Product Product { get; private set; } = null!;
 
         // Logic
         public OrderItem() { }
 
-        public OrderItem(int productId, int orderId, int quantity, decimal unitPrice, string createdBy)
+        public OrderItem(int productId, int orderId, int quantity, decimal unitPrice, string createdBy
+            , string productTitle)
         {
             ProductId = productId;
             OrderId = orderId;
@@ -40,34 +40,10 @@ namespace Ecom.DAL.Entity
             CreatedBy = createdBy;
             IsDeleted = false;
             TotalPrice = UnitPrice * Quantity;
+            ProductTitle = productTitle;
         }
 
-        public bool Update(int productId, int orderId, int quantity, decimal unitPrice, string userModified)
-        {
-            if (!string.IsNullOrEmpty(userModified))
-            {
-                ProductId = productId;
-                OrderId = orderId;
-                Quantity = quantity;
-                UnitPrice = unitPrice;
-                UpdatedOn = DateTime.UtcNow;
-                UpdatedBy = userModified;
-                TotalPrice = UnitPrice * Quantity;
-                return true;
-            }
-            return false;
-        }
-        public bool ToggleDelete(string userModified)
-        {
-            if (!string.IsNullOrEmpty(userModified))
-            {
-                IsDeleted = !IsDeleted;
-                DeletedOn = DateTime.UtcNow;
-                DeletedBy = userModified;
-                return true;
-            }
-            return false;
-        }
+        // Order Item must be immutable (no update, no delete)
 
     }
 }

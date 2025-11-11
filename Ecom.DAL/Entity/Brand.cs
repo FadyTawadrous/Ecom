@@ -3,9 +3,8 @@ namespace Ecom.DAL.Entity
 {
     public class Brand
     {
-        [Key]
         public int Id { get; private set; }
-        public string? Name { get; private set; }
+        public string Name { get; private set; } = null!;
         public string? ImageUrl { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
@@ -20,7 +19,7 @@ namespace Ecom.DAL.Entity
 
         // Logic
         public Brand() { }
-        public Brand(string name, string imageUrl, string createdBy)
+        public Brand(string name, string? imageUrl, string createdBy)
         {
             Name = name;
             ImageUrl = imageUrl;
@@ -29,7 +28,7 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
         }
 
-        public bool Update(string name, string imageUrl, string userModified)
+        public bool Update(string name, string? imageUrl, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {

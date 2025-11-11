@@ -3,7 +3,6 @@ namespace Ecom.DAL.Entity
 {
     public class Cart
     {
-        [Key]
         public int Id { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
@@ -12,16 +11,14 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Computed properies (Not mapped to the database)
-        [NotMapped]
         public decimal TotalAmount => CartItems?.Where(i => !i.IsDeleted)
-            .Sum(i => i.UnitPrice * i.Quantity) ?? 0;
+            .Sum(i => i.TotalPrice) ?? 0;
 
         // Foriegn Keys
-        [ForeignKey("AppUser")]
-        public string? AppUserId { get; private set; }
+        public string AppUserId { get; private set; }
 
         // Navigation Properties
-        public virtual AppUser? AppUser { get; private set; }
+        public virtual AppUser AppUser { get; private set; } = null!;
         public virtual ICollection<CartItem>? CartItems { get; private set; }
 
         // Logic

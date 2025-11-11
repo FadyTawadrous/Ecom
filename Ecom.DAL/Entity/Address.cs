@@ -2,12 +2,11 @@
 {
     public class Address
     {
-        [Key]
         public int Id { get; private set; }
-        public string? Street { get; private set; } = string.Empty;
-        public string? City { get; private set; } = string.Empty;
-        public string? Country { get; private set; } = string.Empty;
-        public string? PostalCode { get; private set; } = string.Empty;
+        public string Street { get; private set; } = null!;
+        public string City { get; private set; } = null!;
+        public string Country { get; private set; } = null!;
+        public string PostalCode { get; private set; } = null!;
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }        
         public string? UpdatedBy { get; private set; }
@@ -18,10 +17,10 @@
 
         // Foriegn Keys
         [ForeignKey("AppUser")]
-        public string? AppUserId { get; private set; } = string.Empty;
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
-        public virtual AppUser? AppUser { get; private set; }
+        public virtual AppUser AppUser { get; private set; } = null!;
 
         // Logic
         public Address() { }
@@ -38,15 +37,16 @@
             AppUserId = appUserId;
         }
 
-        public bool Update(string street, string city, string country, string postalCode, string updatedBy)
+        public bool Update(string street, string city, string country, string postalCode,
+            string appUserId, string userModified)
         {
             if (!string.IsNullOrEmpty(updatedBy))
             {
                 Street = street;
                 City = city;
                 Country = country;
-                PostalCode = postalCode;                
-                UpdatedBy = updatedBy;
+                PostalCode = postalCode;
+                AppUserId = appUserId;
                 UpdatedOn = DateTime.UtcNow;
                 return true;
             }

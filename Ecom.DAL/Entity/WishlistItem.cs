@@ -3,7 +3,6 @@ namespace Ecom.DAL.Entity
 {
     public class WishlistItem
     {
-        [Key]
         public int Id { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }      
@@ -14,15 +13,12 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
-        [ForeignKey("AppUser")]
-        public string? AppUserId { get; private set; }
-
-        [ForeignKey("Product")]
+        public string AppUserId { get; private set; } = null!;
         public int ProductId { get; private set; }
 
         // Navigation Properties
-        public virtual AppUser? AppUser { get; private set; }
-        public virtual Product? Product { get; private set; }
+        public virtual AppUser AppUser { get; private set; } = null!;
+        public virtual Product Product { get; private set; } = null!;
 
         // Logic
         public WishlistItem() { }
@@ -33,19 +29,6 @@ namespace Ecom.DAL.Entity
             CreatedBy = createdBy;
             CreatedOn = DateTime.UtcNow;
             IsDeleted = false;
-        }
-
-        public bool Update(string appUserId, int productId, string updatedBy) // can be removed
-        {
-            if (!string.IsNullOrEmpty(updatedBy))
-            {
-                AppUserId = appUserId;
-                ProductId = productId;
-                UpdatedOn = DateTime.UtcNow;
-                UpdatedBy = updatedBy;
-                return true;
-            }
-            return false;
         }
 
         public bool ToggleDelete(string deletedBy)
