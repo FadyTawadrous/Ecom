@@ -5,10 +5,11 @@ namespace Ecom.DAL.Entity
     {
         [Key]
         public int Id { get; private set; }
-        public string? Name { get; private set; }
+        [Required, MaxLength(50)]
+        public string Name { get; private set; } = string.Empty;
         public string? ImageUrl { get; private set; }
         public string? CreatedBy { get; private set; }
-        public DateTime CreatedOn { get; private set; }
+        public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
         public DateTime? DeletedOn { get; private set; }
         public string? DeletedBy { get; private set; }
         public DateTime? UpdatedOn { get; private set; }

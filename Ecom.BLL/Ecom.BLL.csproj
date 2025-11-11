@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="ModelVM\Account\" />
     <Folder Include="ModelVM\Role\" />
-    <Folder Include="Service\Abstraction\" />
   </ItemGroup>
 
   <ItemGroup>

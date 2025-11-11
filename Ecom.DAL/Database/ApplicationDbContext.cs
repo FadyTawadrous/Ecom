@@ -3,6 +3,9 @@ namespace Ecom.DAL.Database
 {
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
+
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("Server=.;Database=EcomDB;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False");
