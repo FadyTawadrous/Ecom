@@ -1,5 +1,4 @@
 ﻿
-
 namespace Ecom.BLL.ModelVM.ProductImageURL
 {
     public class UpdateProductImageUrlVM

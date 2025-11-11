@@ -24,10 +24,6 @@ namespace Ecom.DAL.Database
             // Alternatively, you can use the following line to automatically apply all configurations from the assembly
             // modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
-        public DbSet<ProductImageUrl> ProductImageUrls { get; set; }
-        public DbSet<ProductReview> ProductReviews { get; set; }
-
-        public DbSet<Brand> Brands { get; set; }
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Brand> Brands { get; set; }

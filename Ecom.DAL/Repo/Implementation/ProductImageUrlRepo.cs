@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Ecom.DAL.Entity;
-using Microsoft.EntityFrameworkCore;
-using Ecom.DAL.Repo.Abstraction;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Diagnostics.Metrics;
-
+﻿
 namespace Ecom.DAL.Repository.Implementation
 {
     public class ProductImageUrlRepo : IProductImageUrlRepo
@@ -91,7 +81,7 @@ namespace Ecom.DAL.Repository.Implementation
                 if (oldImage == null)
                     return false;
 
-                bool updated = oldImage.Update(newImage.ImageUrl, newImage.ProductId, newImage.UpdatedBy);
+                bool updated = oldImage.Update(newImage.ImageUrl, newImage.UpdatedBy);
                 if (updated)
                 {
                     _db.ProductImageUrls.Update(oldImage);

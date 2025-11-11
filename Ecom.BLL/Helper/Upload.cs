@@ -8,9 +8,8 @@ namespace Ecom.BLL.Helper
             try
             {
                 //catch the folder Path and the file name in server
-                // 1 ) Get Directory
-                string FolderPath = Directory.GetCurrentDirectory() + "/wwwroot/Files/" + FolderName;
-
+                // 1 ) Get Directory, folder path: Ecom.PL/Files/<FolderName>
+                string FolderPath = Directory.GetCurrentDirectory() + "/Files/" + FolderName;
 
                 //2) Get File Name
                 string FileName = Guid.NewGuid() + Path.GetFileName(File.FileName);
@@ -40,7 +39,7 @@ namespace Ecom.BLL.Helper
         {
             try
             {
-                var directory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files", FolderName, fileName);
+                var directory = Path.Combine(Directory.GetCurrentDirectory(), "Files", FolderName, fileName);
 
                 if (File.Exists(directory))
                 {

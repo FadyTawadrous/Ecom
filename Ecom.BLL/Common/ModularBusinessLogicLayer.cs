@@ -1,7 +1,4 @@
 ﻿
-using Ecom.BLL.Service.Abstraction;
-using Ecom.BLL.Service.Implementation;
-
 namespace Ecom.BLL.Common
 {
     public static class ModularBusinessLogicLayer
@@ -12,6 +9,7 @@ namespace Ecom.BLL.Common
 
 
             services.AddScoped<IProductImageUrlService, ProductImageUrlService>();
+            services.AddScoped<IBrandService, BrandService>();
             return services;
         }
     }

@@ -1,8 +1,5 @@
 ﻿
-using Ecom.BLL.ModelVM.Brand;
-using Ecom.DAL.Entity;
-
-namespace Ecom.BLL.AutoMapper
+namespace Ecom.BLL.Mapper
 {
     public class DomainProfile : Profile
     {

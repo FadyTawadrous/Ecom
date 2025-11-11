@@ -1,5 +1,4 @@
 ﻿
-
 namespace Ecom.DAL.Repo.Abstraction
 {
     public interface IProductImageUrlRepo
