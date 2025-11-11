@@ -37,8 +37,7 @@
             AppUserId = appUserId;
         }
 
-        public bool Update(string street, string city, string country, string postalCode,
-            string appUserId, string userModified)
+        public bool Update(string street, string city, string country, string postalCode, string updatedBy)
         {
             if (!string.IsNullOrEmpty(updatedBy))
             {
@@ -46,7 +45,7 @@
                 City = city;
                 Country = country;
                 PostalCode = postalCode;
-                AppUserId = appUserId;
+                UpdatedBy = updatedBy;
                 UpdatedOn = DateTime.UtcNow;
                 return true;
             }
