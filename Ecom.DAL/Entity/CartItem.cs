@@ -3,7 +3,6 @@ namespace Ecom.DAL.Entity
 {
     public class CartItem
     {
-        [Key]
         public int Id { get; private set; }
         public int Quantity { get; private set; }
         public decimal UnitPrice { get; private set; }
@@ -17,19 +16,15 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foreign Keys
-        [ForeignKey("Cart")]
         public int CartId { get; private set; }
-
-        [ForeignKey("Product")]
         public int ProductId { get; private set; }
 
         // Navigation Properties
-        public virtual Cart? Cart { get; private set; }
-        public virtual Product? Product { get; private set; }
+        public virtual Cart Cart { get; private set; } = null!;
+        public virtual Product Product { get; private set; } = null!;
 
         // Logic
         public CartItem() { }
-
         public CartItem(int productId, int cartId, int quantity, decimal unitPrice, string createdBy)
         {
             ProductId = productId;
@@ -42,12 +37,10 @@ namespace Ecom.DAL.Entity
             TotalPrice = UnitPrice * Quantity;
         }
 
-        public bool Update(int productId, int cartId, int quantity, decimal unitPrice, string userModified)
+        public bool Update(int quantity, decimal unitPrice, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
-                ProductId = productId;
-                CartId = cartId;
                 Quantity = quantity;
                 UnitPrice = unitPrice;
                 UpdatedOn = DateTime.UtcNow;

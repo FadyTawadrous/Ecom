@@ -5,6 +5,8 @@ namespace Ecom.DAL.Configuration
     {
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
+            builder.Ignore(c => c.TotalAmount);
+
             builder.HasOne(c => c.AppUser)
                 .WithOne(u => u.Cart)
                 .HasForeignKey<Cart>(c => c.AppUserId)

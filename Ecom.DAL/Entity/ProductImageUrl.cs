@@ -3,9 +3,8 @@ namespace Ecom.DAL.Entity
 {
     public class ProductImageUrl
     {
-        [Key]
         public int Id { get; private set; }
-        public string? ImageUrl { get; private set; }
+        public string ImageUrl { get; private set; } = null!;
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
         public DateTime? DeletedOn { get; private set; }
@@ -14,11 +13,11 @@ namespace Ecom.DAL.Entity
         public string? UpdatedBy { get; private set; }
         public bool IsDeleted { get; private set; }
 
-        [ForeignKey("Product")]
+        // Foriegn Keys
         public int ProductId { get; private set; }
 
         // Navigation Properties
-        public Product? Product { get; private set; }
+        public Product Product { get; private set; } = null!;
 
         // Logic
         public ProductImageUrl() { }
@@ -31,12 +30,11 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
         }
 
-        public bool Update(string imageUrl, int productId, string userModified)
+        public bool Update(string imageUrl, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
                 ImageUrl = imageUrl;
-                ProductId = productId;
                 UpdatedOn = DateTime.UtcNow;
                 UpdatedBy = userModified;
                 return true;
