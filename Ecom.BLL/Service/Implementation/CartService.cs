@@ -68,6 +68,36 @@ namespace Ecom.BLL.Service.Implementation
                 {
                     // Getting cart by id
                     var cart = await _cartRepo.GetByUserIdAsync(id);
+        // Get All Carts
+        public async Task<ResponseResult<IEnumerable<GetCartVM>>> GetAllAsync()
+        {
+            try
+            {
+                // Retrieving all non-deleted carts from the repository
+                var carts = await _cartRepo.GetAllAsync(c => !c.IsDeleted);
+
+                // Mapping Entity to ViewModel
+                var cartVMs = _mapper.Map<IEnumerable<GetCartVM>>(carts);
+
+                // Returning Response
+                return new ResponseResult<IEnumerable<GetCartVM>>(cartVMs, "Carts retrieved successfully", true);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        // Get Cart by ID
+        public async Task<ResponseResult<GetCartVM>> GetByIdAsync(int id)
+        {
+            try
+            {
+                if (id > 0)
+                {
+                    // Getting cart by id
+                    var cart = await _cartRepo.GetByIdAsync(id);
 
                     // Checking if cart exists and is not deleted
                     if (cart == null || cart.IsDeleted)
