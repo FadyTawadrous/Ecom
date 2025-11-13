@@ -35,8 +35,7 @@
         {
             try
             {
-                IQueryable<WishlistItem> query = _db.WishlistItems
-                    .Where(w => w.AppUserId == userId && !w.IsDeleted);
+                IQueryable<WishlistItem> query = _db.WishlistItems.Where(w => w.AppUserId == userId);
 
                 // Optional filtering
                 if (filter != null)
@@ -71,8 +70,7 @@
         {
             try
             {
-                IQueryable<WishlistItem> query = _db.WishlistItems
-                    .Where(w => !w.IsDeleted);
+                IQueryable<WishlistItem> query = _db.WishlistItems;
 
                 // Optional filtering
                 if (filter != null)
@@ -122,41 +120,6 @@
             }
         }
 
-        public async Task<bool> UpdateAsync(WishlistItem newItem)
-        {
-            try
-            {
-                if (newItem == null)
-                {
-                    return false;
-                }
-
-                var oldItem = await _db.WishlistItems.FindAsync(newItem.Id);
-
-                if (oldItem == null)
-                {
-                    return false;
-                }
-
-                bool result = oldItem.Update(newItem.AppUserId, newItem.ProductId, newItem.UpdatedBy);
-
-                if (!result)
-                {
-                    return false;
-                }
-
-                _db.WishlistItems.Update(oldItem);
-
-                await _db.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public async Task<bool> ToggleDeleteStatusAsync(int id, string userModified)
         {
             try
@@ -174,6 +137,29 @@
                 {
                     return false;
                 }
+
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var item = await _db.WishlistItems.FindAsync(id);
+
+                if (item == null)
+                {
+                    return false;
+                }
+
+                _db.WishlistItems.Remove(item);
 
                 await _db.SaveChangesAsync();
 

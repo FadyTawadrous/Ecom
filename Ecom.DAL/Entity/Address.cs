@@ -6,7 +6,7 @@
         public string Street { get; private set; } = null!;
         public string City { get; private set; } = null!;
         public string Country { get; private set; } = null!;
-        public string PostalCode { get; private set; } = null!;
+        public string? PostalCode { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }        
         public string? UpdatedBy { get; private set; }

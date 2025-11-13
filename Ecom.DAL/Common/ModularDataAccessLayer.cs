@@ -1,6 +1,7 @@
 ﻿
 using Azure.Core;
 using Ecom.DAL.Repo.Abstraction;
+using Ecom.DAL.Repo.Implementation;
 using Ecom.DAL.Repository.Implementation;
 using Tiers.DAL.Repo.Implementation;
 
@@ -52,6 +53,10 @@ namespace Ecom.DAL.Common
             services.AddScoped<IProductImageUrlRepo, ProductImageUrlRepo>();
             //Dependency injection s oWhen a controller or service asks for an IProductImageUrlRepo,
             // give them a new ProductImageUrlRepo instance for each HTTP request.
+            services.AddScoped<IAddressRepo, AddressRepo>();
+            services.AddScoped<IWishlistItemRepo, WishlistItemRepo>();
+
+
 
             return services;
         }

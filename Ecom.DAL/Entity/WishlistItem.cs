@@ -1,5 +1,4 @@
-﻿
-namespace Ecom.DAL.Entity
+﻿namespace Ecom.DAL.Entity
 {
     public class WishlistItem
     {

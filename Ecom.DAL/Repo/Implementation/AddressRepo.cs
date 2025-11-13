@@ -35,8 +35,7 @@
         {
             try
             {  
-                IQueryable<Address> query = _db.Addresses
-                    .Where(a => a.AppUserId == userId && !a.IsDeleted);
+                IQueryable<Address> query = _db.Addresses.Where(a => a.AppUserId == userId);
 
                 // Optional filtering
                 if (filter != null)
@@ -71,8 +70,7 @@
         {
             try
             {
-                IQueryable<Address> query = _db.Addresses
-                    .Where(a => !a.IsDeleted);
+                IQueryable<Address> query = _db.Addresses;
 
                 // Optional filtering
                 if (filter != null)
@@ -140,7 +138,7 @@
 
                 bool result = oldAddress.Update(
                     newAddress.Street, newAddress.City, newAddress.Country,
-                    newAddress.PostalCode, newAddress.AppUserId, newAddress.UpdatedBy
+                    newAddress.PostalCode, newAddress.UpdatedBy
                     );
 
                 if (!result)
@@ -175,6 +173,29 @@
                 {
                     return false;
                 }
+
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var address = await _db.Addresses.FindAsync(id);
+
+                if (address == null)
+                {
+                    return false;
+                }
+
+                _db.Addresses.Remove(address);
 
                 await _db.SaveChangesAsync();
 
