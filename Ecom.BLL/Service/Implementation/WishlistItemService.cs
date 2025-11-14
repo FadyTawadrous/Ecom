@@ -135,7 +135,7 @@ namespace Ecom.BLL.Service.Implementation
                     return new ResponseResult<bool>(false, "Wishlist item not found.", false);
                 }
 
-                // Delete the employee using the repo
+                // Delete the item using the repo
                 bool result = await _wishlistItemRepo.ToggleDeleteStatusAsync(model.Id, model.DeletedBy); // Soft delete
                 //bool result = await _wishlistItemRepo.DeleteAsync(model.Id); // Hard delete
 
@@ -149,6 +149,25 @@ namespace Ecom.BLL.Service.Implementation
             catch (Exception ex)
             {
                 return new ResponseResult<bool>(false, ex.Message, false);
+            }
+        }
+
+        // Get Delete Model
+        public async Task<ResponseResult<DeleteWishlistItemVM>> GetDeleteModelAsync(int id)
+        {
+            try
+            {
+                var item = await _wishlistItemRepo.GetByIdAsync(id);
+                if (item == null)
+                    return new ResponseResult<DeleteWishlistItemVM>(null,
+                        $"Wishlist item with ID {id} not found.", false);
+
+                var mappedItem = _mapper.Map<DeleteWishlistItemVM>(item);
+                return new ResponseResult<DeleteWishlistItemVM>(mappedItem, null, true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<DeleteWishlistItemVM>(null, ex.Message, false);
             }
         }
 

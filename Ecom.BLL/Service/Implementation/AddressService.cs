@@ -24,7 +24,7 @@ namespace Ecom.BLL.Service.Implementation
                 var address = await _addressRepo.GetByIdAsync(id, includes: a => a.AppUser);
 
                 if (address == null)
-                    return new ResponseResult<GetAddressVM>(null, 
+                    return new ResponseResult<GetAddressVM>(null,
                         $"Address with ID {id} not found.", false);
 
                 var mappedAddress = _mapper.Map<GetAddressVM>(address);
@@ -71,7 +71,7 @@ namespace Ecom.BLL.Service.Implementation
                     pageNumber: pageNumber);
 
                 if (addresses == null || !addresses.Any())
-                    return new ResponseResult<IEnumerable<GetAddressVM>>(null, 
+                    return new ResponseResult<IEnumerable<GetAddressVM>>(null,
                         "No addresses found.", false);
 
                 var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(addresses);
@@ -88,13 +88,13 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                // Map VM -> Entity
+                // 1- Map VM -> Entity
                 var newAddress = _mapper.Map<Address>(model);
 
-                // Call the repo to add the new address
+                // 2- Call the repo to add the new address
                 var result = await _addressRepo.AddAsync(newAddress);
 
-                // Return the response
+                // 3- Return the response
                 if (result)
                 {
                     return new ResponseResult<bool>(true, null, true);
@@ -112,20 +112,20 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                // Get the tracked entity from the repo
+                // 1- Get the tracked entity from the repo
                 var oldAddress = await _addressRepo.GetByIdAsync(model.Id);
                 if (oldAddress == null)
                 {
                     return new ResponseResult<bool>(false, "Address not found.", false);
-                }               
+                }
 
-                // Map VM -> Entity
+                // 2- Map VM -> Entity
                 var address = _mapper.Map<Address>(model);
 
-                // Call the repo to update the employee
+                // 3- Call the repo to update the employee
                 var result = await _addressRepo.UpdateAsync(address); // Use the new repo method
 
-                // Return the response
+                // 4- Return the response
                 if (result)
                 {
                     return new ResponseResult<bool>(true, null, true);
@@ -164,6 +164,25 @@ namespace Ecom.BLL.Service.Implementation
             catch (Exception ex)
             {
                 return new ResponseResult<bool>(false, ex.Message, false);
+            }
+        }
+
+        // Get Delete Model
+        public async Task<ResponseResult<DeleteAddressVM>> GetDeleteModelAsync(int id)
+        {
+            try
+            {
+                var address = await _addressRepo.GetByIdAsync(id);
+                if (address == null)
+                    return new ResponseResult<DeleteAddressVM>(null,
+                        $"Address with ID {id} not found.", false);
+
+                var mappedAddress = _mapper.Map<DeleteAddressVM>(address);
+                return new ResponseResult<DeleteAddressVM>(mappedAddress, null, true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<DeleteAddressVM>(null, ex.Message, false);
             }
         }
     }

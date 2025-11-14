@@ -17,5 +17,8 @@ namespace Ecom.BLL.Service.Abstraction
 
         // Delete
         Task<ResponseResult<bool>> DeleteAsync(DeleteAddressVM model);
+
+        // Get Delete Model
+        Task<ResponseResult<DeleteAddressVM>> GetDeleteModelAsync(int id);
     }
 }
