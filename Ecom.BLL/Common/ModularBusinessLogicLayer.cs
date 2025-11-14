@@ -12,6 +12,8 @@ namespace Ecom.BLL.Common
 
 
             services.AddScoped<IProductImageUrlService, ProductImageUrlService>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IWishlistItemService, WishlistItemService>();
             return services;
         }
     }
