@@ -1,4 +1,6 @@
 ﻿
+
+
 namespace Ecom.BLL.Common
 {
     public static class ModularBusinessLogicLayer
@@ -11,6 +13,8 @@ namespace Ecom.BLL.Common
             services.AddScoped<IProductImageUrlService, ProductImageUrlService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITokenService, TokenService>();
             return services;
         }
     }

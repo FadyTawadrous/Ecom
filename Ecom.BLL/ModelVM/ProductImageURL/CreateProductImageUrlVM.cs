@@ -8,4 +8,4 @@ namespace Ecom.BLL.ModelVM.ProductImageURL
         public int ProductId { get; set; }
         public string? CreatedBy { get; set; } // username or admin name
     }
-}
+} 

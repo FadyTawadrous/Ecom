@@ -55,6 +55,7 @@ namespace Ecom.DAL.Common
 
             services.AddScoped<IProductRepo, ProductRepo>();
 
+            services.AddScoped<IAccountRepo, AccountRepo>();
             return services;
         }
     }

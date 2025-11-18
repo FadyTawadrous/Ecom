@@ -4,10 +4,10 @@ namespace Ecom.DAL.Entity
     public class Category
     {
         public int Id { get; private set; }
-        public string Name { get; private set; } = null!;
+        public string? Name { get; private set; }
         public string? ImageUrl { get; private set; }
         public string? CreatedBy { get; private set; }
-        public DateTime CreatedOn { get; private set; }
+        public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
         public DateTime? DeletedOn { get; private set; }
         public string? DeletedBy { get; private set; }
         public DateTime? UpdatedOn { get; private set; }
