@@ -1,6 +1,7 @@
 ﻿
 using Ecom.BLL.ModelVM.Cart;
 using Ecom.BLL.ModelVM.Category;
+using Ecom.DAL.Entity;
 
 namespace Ecom.BLL.Service.Implementation
 {
@@ -21,6 +22,13 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+
+                if (string.IsNullOrEmpty(model.AppUserId))
+                {
+                    return new ResponseResult<bool>(false, "Invalid UserId", false);
+                }
+            
+
                 // mapping ViewModel to Entity
                 var cart = _mapper.Map<Cart>(model);
 
@@ -44,6 +52,11 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                if (model.Id <= 0)
+                {
+                    return new ResponseResult<bool>(false, "Invalid Id", false);
+                }
+
                 // Toggling the IsDeleted status of the cart
                 bool isDeleted = await _cartRepo.ToggleDeleteAsync(model.Id, model.DeletedBy);
                 if (isDeleted)
@@ -59,28 +72,35 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        // Get Cart by ID
-        public async Task<ResponseResult<GetCartVM>> GetByUserIdAsync(string id)
+        // Get Cart by User ID
+        public async Task<ResponseResult<GetCartVM>> GetByUserIdAsync(string UserId)
         {
             try
             {
-                if (id != null)
+                // Validating the user ID 
+                if (!string.IsNullOrEmpty(UserId))
                 {
-                    // Getting cart by id
-                    var cart = await _cartRepo.GetByUserIdAsync(id);
-        // Get All Carts
-        public async Task<ResponseResult<IEnumerable<GetCartVM>>> GetAllAsync()
-        {
-            try
-            {
-                // Retrieving all non-deleted carts from the repository
-                var carts = await _cartRepo.GetAllAsync(c => !c.IsDeleted);
+                    // Getting cart by user id
+                    var cart = await _cartRepo.GetByUserIdAsync(UserId, c => c.CartItems!);
 
-                // Mapping Entity to ViewModel
-                var cartVMs = _mapper.Map<IEnumerable<GetCartVM>>(carts);
+                    // Checking if cart exists   
+                    if (cart == null)
+                    {
+                        return new ResponseResult<GetCartVM>(null!, "cart not found", false);
+                    }
+                    // Checking if cart is deleted
+                    if (cart.IsDeleted)
+                    {
+                        return new ResponseResult<GetCartVM>(null!, "cart is deleted", false);
+                    }
 
-                // Returning Response
-                return new ResponseResult<IEnumerable<GetCartVM>>(cartVMs, "Carts retrieved successfully", true);
+                    // Mapping Entity to ViewModel
+                    var cartVM = _mapper.Map<GetCartVM>(cart);
+
+                    // Returning Response  
+                    return new ResponseResult<GetCartVM>(cartVM, "Cart retrieved successfully", true);
+                }
+                return new ResponseResult<GetCartVM>(null!, "Invalid Id", false);
             }
             catch (Exception)
             {
@@ -88,7 +108,7 @@ namespace Ecom.BLL.Service.Implementation
                 throw;
             }
         }
-
+        
         // Get Cart by ID
         public async Task<ResponseResult<GetCartVM>> GetByIdAsync(int id)
         {
@@ -125,6 +145,11 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                if (model.Id <= 0)
+                {
+                    return new ResponseResult<bool>(false, "Invalid Id", false);
+                }
+
                 // Permanently deleting the cart from database
                 bool isDeleted = await _cartRepo.HardDeleteAsync(model.Id);
                 if (isDeleted)
@@ -145,7 +170,7 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                // Checking if the category exists
+                // Checking if the cart exists
                 var existing = await _cartRepo.GetByIdAsync(model.Id);
                 if (existing == null)
                 {

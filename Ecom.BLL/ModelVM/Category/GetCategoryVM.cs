@@ -19,19 +19,6 @@ namespace Ecom.BLL.ModelVM.Category
         public bool IsDeleted { get; set; }
 
         // Navigation Property - List of Products in this Category
-        public ICollection<ProductInCategoryVM>? Products { get; set; }
-    }
-
-    public class ProductInCategoryVM
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public decimal DiscountPercentage { get; set; }
-        public decimal Rating { get; set; } // Controlled by UpdateRating()
-        public int Stock { get; set; } // Controlled by TryRemoveStock()
-        public int QuantitySold { get; set; } // Controlled by AddToQuantitySold()
-        public string? ThumbnailUrl { get; set; }
+        public virtual ICollection<Product>? Products { get; private set; }
     }
 }

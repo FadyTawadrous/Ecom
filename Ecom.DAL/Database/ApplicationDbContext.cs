@@ -17,7 +17,10 @@ namespace Ecom.DAL.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Apply all configurations
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             // Register entity config
             //modelBuilder.ApplyConfiguration(new EmployeeConfig());
 

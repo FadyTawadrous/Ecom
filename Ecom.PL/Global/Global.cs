@@ -6,3 +6,8 @@ global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Identity;
 global using Ecom.DAL.Entity;
+global using System.Security.Claims;
+global using Ecom.BLL.ModelVM.Account;
+global using Ecom.BLL.Service.Abstraction;
+global using Ecom.BLL.ModelVM.Role;
+global using Microsoft.AspNetCore.Authorization;

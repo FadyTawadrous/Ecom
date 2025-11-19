@@ -21,6 +21,18 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                // Validate name
+                if (string.IsNullOrWhiteSpace(model.Name))
+                {
+                    return new ResponseResult<bool>(false, "Category name cannot be empty", false);
+                }
+
+                // Checking if a category with the same name already exists
+                if (await _categoryRepo.ExistsByNameAsync(model.Name))
+                {
+                    return new ResponseResult<bool>(false, "Category with the same name already exists", false);
+                }
+
                 // Uploading Image to the Server
                 // If an image is uploaded, get the URL 
                 // Else set to default image
@@ -57,6 +69,11 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                if (model.Id <= 0)
+                {
+                    return new ResponseResult<bool>(false, "Invalid Category Id", false);
+                }
+
                 // Toggling the IsDeleted status of the category
                 bool isDeleted = await _categoryRepo.ToggleDeleteAsync(model.Id, model.DeletedBy);
                 if (isDeleted)
@@ -129,6 +146,11 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                if (model.Id <= 0)
+                {
+                    return new ResponseResult<bool>(false, "Invalid Category Id", false);
+                }
+
                 // Permanently deleting the category from database
                 bool isDeleted = await _categoryRepo.HardDeleteAsync(model.Id);
                 if (isDeleted)
@@ -144,11 +166,22 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
+        public Task<ResponseResult<bool>> ToggleDeleteAsync(int id, string userModified)
+        {
+            throw new NotImplementedException();
+        }
+
         // Update Category
         public async Task<ResponseResult<bool>> UpdateAsync(UpdateCategoryVM model)
         {
             try
             {
+                // Validate Id
+                if (model.Id <= 0)
+                {
+                    return new ResponseResult<bool>(false, "Invalid Category Id", false);
+                }
+
                 // Checking if the category exists
                 var existing = await _categoryRepo.GetByIdAsync(model.Id);
                 if (existing == null)

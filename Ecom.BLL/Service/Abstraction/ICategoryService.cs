@@ -13,6 +13,5 @@ namespace Ecom.BLL.Service.Abstraction
         Task<ResponseResult<bool>> UpdateAsync(UpdateCategoryVM model);
         Task<ResponseResult<bool>> DeleteAsync(DeleteCategoryVM model);
         Task<ResponseResult<bool>> HardDeleteAsync(DeleteCategoryVM model);
-        Task<ResponseResult<bool>> ToggleDeleteAsync(int id, string userModified);
     }
 }
