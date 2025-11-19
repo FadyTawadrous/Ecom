@@ -1,5 +1,5 @@
 ﻿
-namespace Ecom.DAL.Repository.Implementation
+namespace Ecom.DAL.Repo.Implementation
 {
     public class ProductImageUrlRepo : IProductImageUrlRepo
     {

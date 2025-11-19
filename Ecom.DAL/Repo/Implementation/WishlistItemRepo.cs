@@ -1,4 +1,5 @@
-﻿namespace Ecom.DAL.Repo.Implementation
+﻿
+namespace Ecom.DAL.Repo.Implementation
 {
     public class WishlistItemRepo : IWishlistItemRepo
     {

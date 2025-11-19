@@ -1,4 +1,5 @@
-﻿namespace Ecom.DAL.Repo.Abstraction
+﻿
+namespace Ecom.DAL.Repo.Abstraction
 {
     public interface IWishlistItemRepo
     {

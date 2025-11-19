@@ -1,4 +1,5 @@
-﻿namespace Ecom.BLL.ModelVM.WishlistItem
+﻿
+namespace Ecom.BLL.ModelVM.WishlistItem
 {
     public class DeleteWishlistItemVM
     {

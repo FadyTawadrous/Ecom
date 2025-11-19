@@ -1,4 +1,5 @@
-﻿namespace Ecom.PL.Controllers
+﻿
+namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

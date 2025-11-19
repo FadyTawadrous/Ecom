@@ -1,4 +1,5 @@
-﻿namespace Ecom.BLL.ModelVM.Address
+﻿
+namespace Ecom.BLL.ModelVM.Address
 {
     public class CreateAddressVM
     {

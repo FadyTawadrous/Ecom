@@ -1,4 +1,4 @@
-﻿using Ecom.BLL.ModelVM.Address;
+﻿
 namespace Ecom.BLL.Service.Abstraction
 {
     public interface IAddressService

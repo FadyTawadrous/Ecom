@@ -51,23 +51,34 @@ namespace Ecom.BLL.Service.Implementation
                 //3- Map RegisterUserVM to AppUser
                 var user = _mapper.Map<AppUser>(registerVM);
 
-                //4 - Call the repo to add the new user
-                var result = await _accountRepo.AddAsync(user, registerVM.Password);
+                //4 - Add the new user using UserManager
+                user.EmailConfirmed = true; // For demo purposes, set email as confirmed
 
-                //5- If failed to create user, return error
-                if (!result)
+                var createResult = await _userManager.CreateAsync(user, registerVM.Password);
+                if (!createResult.Succeeded)
                 {
-                    return new ResponseResult<AuthResponseVM>(null, "Failed to register a new user.", false);
+                    var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                    return new ResponseResult<AuthResponseVM>(null, errors, false);
                 }
 
+                //5- Assign "Customer" role to the new user
+                var addToRoleResult = await _userManager.AddToRoleAsync(user, "Customer");
+                if (!addToRoleResult.Succeeded)
+                {
+                    var errors = string.Join(", ", addToRoleResult.Errors.Select(e => e.Description));
+                    return new ResponseResult<AuthResponseVM>(null, errors, false);
+                }
+
+                // Here you should also call the cart service to create a cart for the user
+
                 //6- If successful, generate token, and return AuthResponseVM
-                var token = _tokenService.CreateToken(user); // Generate JWT token
+                var token = await _tokenService.CreateToken(user); // Generate JWT token
                 var userVM = _mapper.Map<GetUserVM>(user); // Map AppUser to GetUserVM
                 var authResponse = new AuthResponseVM // Create AuthresponseVM
                 {
                     User = userVM,
                     Token = token,
-                    TokenExpiration = DateTime.Now.AddDays(7)
+                    TokenExpiration = DateTime.UtcNow.AddDays(7)
                 };
                 return new ResponseResult<AuthResponseVM>(authResponse, null, true);
             }
@@ -98,13 +109,13 @@ namespace Ecom.BLL.Service.Implementation
                 }
 
                 //4- If successful, generate token, and return AuthResponseVM
-                var token = _tokenService.CreateToken(user); // Generate JWT token
+                var token = await _tokenService.CreateToken(user); // Generate JWT token
                 var userVM = _mapper.Map<GetUserVM>(user); // Map AppUser to GetUserVM
                 var authResponse = new AuthResponseVM // Create AuthresponseVM
                 {
                     User = userVM,
                     Token = token,
-                    TokenExpiration = DateTime.Now.AddDays(7)
+                    TokenExpiration = DateTime.UtcNow.AddDays(7)
                 };
                 return new ResponseResult<AuthResponseVM>(authResponse, null, true);
             }
@@ -150,7 +161,7 @@ namespace Ecom.BLL.Service.Implementation
                 {
                     return new ResponseResult<GetUserVM>(null, "Failed to update Name or Image.", false);
                 }
-                _userManager.SetPhoneNumberAsync(user, updateVM.PhoneNumber).Wait();
+                await _userManager.SetPhoneNumberAsync(user, updateVM.PhoneNumber);
 
                 //4- Save changes
                 var result = await _userManager.UpdateAsync(user);

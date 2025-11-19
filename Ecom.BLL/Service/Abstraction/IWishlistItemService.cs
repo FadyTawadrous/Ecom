@@ -1,5 +1,4 @@
-﻿using Ecom.BLL.ModelVM.WishlistItem;
-
+﻿
 namespace Ecom.BLL.Service.Abstraction
 {
     public interface IWishlistItemService

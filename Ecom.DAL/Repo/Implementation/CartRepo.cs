@@ -1,8 +1,4 @@
 ﻿
-
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-
 namespace Ecom.DAL.Repo.Implementation
 {
     // Implementation of Cart Repository

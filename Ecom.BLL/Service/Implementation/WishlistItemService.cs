@@ -1,4 +1,5 @@
-﻿namespace Ecom.BLL.Service.Implementation
+﻿
+namespace Ecom.BLL.Service.Implementation
 {
     public class WishlistItemService : IWishlistItemService
     {

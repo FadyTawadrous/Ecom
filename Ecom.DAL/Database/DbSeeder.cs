@@ -1,5 +1,4 @@
-﻿
-namespace Ecom.DAL.Database
+﻿namespace Ecom.DAL.Database
 {
     public static class DbSeeder
     {
