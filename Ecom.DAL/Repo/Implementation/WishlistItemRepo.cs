@@ -120,34 +120,6 @@
             }
         }
 
-        public async Task<bool> ToggleDeleteStatusAsync(int id, string userModified)
-        {
-            try
-            {
-                var item = await _db.WishlistItems.FindAsync(id);
-
-                if (item == null)
-                {
-                    return false;
-                }
-
-                bool result = item.ToggleDelete(userModified);
-
-                if (!result)
-                {
-                    return false;
-                }
-
-                await _db.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public async Task<bool> DeleteAsync(int id)
         {
             try

@@ -16,7 +16,6 @@
 
         // Command Methods
         Task<bool> AddAsync(WishlistItem newItem);
-        Task<bool> ToggleDeleteStatusAsync(int id, string userModified);
         Task<bool> DeleteAsync(int id);
     }
 }

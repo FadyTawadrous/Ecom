@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ecom.BLL.ModelVM.Brand;
-using Ecom.BLL.Service.Abstraction;
-using Ecom.DAL.Entity;
-using Ecom.DAL.Repo.Abstraction;
-
+﻿
 namespace Ecom.BLL.Service.Implementation
 {
     public class BrandService : IBrandService

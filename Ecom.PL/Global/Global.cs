@@ -2,3 +2,12 @@
 global using Ecom.BLL.Common;
 global using Ecom.DAL.Database;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Identity;
+global using Ecom.DAL.Entity;
+global using Microsoft.EntityFrameworkCore;
+global using Ecom.BLL.ModelVM.Address;
+global using Ecom.BLL.ModelVM.WishlistItem;
+global using Ecom.BLL.Service.Abstraction;
+global using Microsoft.AspNetCore.Mvc;

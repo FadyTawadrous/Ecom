@@ -1,6 +1,5 @@
 ﻿
-using Ecom.BLL.Service.Abstraction;
-using Ecom.BLL.Service.Implementation;
+
 
 namespace Ecom.BLL.Common
 {
@@ -12,6 +11,9 @@ namespace Ecom.BLL.Common
 
 
             services.AddScoped<IProductImageUrlService, ProductImageUrlService>();
+            services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IWishlistItemService, WishlistItemService>();
             return services;

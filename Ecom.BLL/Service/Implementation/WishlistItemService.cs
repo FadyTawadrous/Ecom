@@ -1,10 +1,4 @@
-﻿using Ecom.BLL.ModelVM.WishlistItem;
-using Ecom.BLL.Service.Abstraction;
-using Ecom.DAL.Entity;
-using Ecom.DAL.Repo.Abstraction;
-using System.Linq.Expressions;
-
-namespace Ecom.BLL.Service.Implementation
+﻿namespace Ecom.BLL.Service.Implementation
 {
     public class WishlistItemService : IWishlistItemService
     {
@@ -45,9 +39,8 @@ namespace Ecom.BLL.Service.Implementation
             {
                 // Define filter expression
                 Expression<Func<WishlistItem, bool>> filter = w =>
-                    !w.IsDeleted &&
-                    (string.IsNullOrEmpty(searchName) ||
-                     w.Product.Title.ToLower().Contains(searchName.ToLower()));
+                     string.IsNullOrEmpty(searchName) ||
+                     w.Product.Title.ToLower().Contains(searchName.ToLower());
 
                 var items = await _wishlistItemRepo.GetAllAsync(
                     filter: filter,
@@ -75,9 +68,8 @@ namespace Ecom.BLL.Service.Implementation
             {
                 // Define filter expression
                 Expression<Func<WishlistItem, bool>> filter = w =>
-                    !w.IsDeleted &&
-                    (string.IsNullOrEmpty(searchName) ||
-                     w.Product.Title.ToLower().Contains(searchName.ToLower()));
+                     string.IsNullOrEmpty(searchName) ||
+                     w.Product.Title.ToLower().Contains(searchName.ToLower());
 
                 var items = await _wishlistItemRepo.GetAllByUserIdAsync(
                     userId: userId,
@@ -135,16 +127,14 @@ namespace Ecom.BLL.Service.Implementation
                     return new ResponseResult<bool>(false, "Wishlist item not found.", false);
                 }
 
-                // Delete the item using the repo
-                bool result = await _wishlistItemRepo.ToggleDeleteStatusAsync(model.Id, model.DeletedBy); // Soft delete
-                //bool result = await _wishlistItemRepo.DeleteAsync(model.Id); // Hard delete
-
+                // Delete the item using the repo (hard delete)
+                bool result = await _wishlistItemRepo.DeleteAsync(model.Id);
                 if (result)
                 {
                     return new ResponseResult<bool>(true, null, true);
                 }
 
-                return new ResponseResult<bool>(false, "Failed to toggle delete status.", false);
+                return new ResponseResult<bool>(false, "Failed to delete wishlist item.", false);
             }
             catch (Exception ex)
             {
@@ -168,33 +158,6 @@ namespace Ecom.BLL.Service.Implementation
             catch (Exception ex)
             {
                 return new ResponseResult<DeleteWishlistItemVM>(null, ex.Message, false);
-            }
-        }
-
-        // Add/Move to cart
-        public async Task<ResponseResult<bool>> AddToCartAsync(int id, string userId)
-        {
-            try
-            {
-                // Get wishlist item product details
-                var wishlistItem = await _wishlistItemRepo.GetByIdAsync(id, w => w.Product);
-
-                if (wishlistItem == null || wishlistItem.AppUserId != userId)
-                    return new ResponseResult<bool>(false, "Wishlist item not found or unauthorized.", false);
-
-                // Call the cart service to add/move the wishlist item to cart using product id
-                var result = true;// = await _cartRepo.AddToCartAsync(id, w => w.Product.Id);
-
-                // Return the response
-                if (result)
-                {
-                    return new ResponseResult<bool>(true, null, true);
-                }
-                return new ResponseResult<bool>(false, "Failed to add/move wishlist item to cart.", false);
-            }
-            catch (Exception ex)
-            {
-                return new ResponseResult<bool>(false, ex.Message, false);
             }
         }
     }

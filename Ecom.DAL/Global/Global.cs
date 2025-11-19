@@ -13,3 +13,6 @@ global using Ecom.DAL.Entity;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Ecom.DAL.Enum;
 global using Ecom.DAL.Repo.Abstraction;
+global using Ecom.DAL.Enum;
+global using Ecom.DAL.Repo.Abstraction;
+global using Ecom.DAL.Repository.Implementation;

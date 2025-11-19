@@ -22,9 +22,4 @@
     <ProjectReference Include="..\Ecom.BLL\Ecom.BLL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Files\Images\" />
-    <Folder Include="Files\Images\" />
-  </ItemGroup>
-
 </Project>

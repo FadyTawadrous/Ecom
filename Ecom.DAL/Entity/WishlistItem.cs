@@ -5,9 +5,6 @@
         public int Id { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
-        public string? DeletedBy { get; private set; }
-        public DateTime? DeletedOn { get; private set; }
-        public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
         public string AppUserId { get; private set; } = null!;
@@ -25,19 +22,6 @@
             ProductId = productId;
             CreatedBy = createdBy;
             CreatedOn = DateTime.UtcNow;
-            IsDeleted = false;
-        }
-
-        public bool ToggleDelete(string deletedBy)
-        {
-            if (!string.IsNullOrEmpty(deletedBy))
-            {
-                IsDeleted = !IsDeleted;
-                DeletedBy = deletedBy;
-                DeletedOn = DateTime.UtcNow;          
-                return true;
-            }
-            return false;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace Ecom.DAL.Configuration
 {
-    internal class OrderConfig : IEntityTypeConfiguration<Order>
+    public class OrderConfig : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {

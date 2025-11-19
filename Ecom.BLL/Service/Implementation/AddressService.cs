@@ -1,9 +1,4 @@
-﻿using Ecom.BLL.ModelVM.Address;
-using Ecom.BLL.Service.Abstraction;
-using Ecom.DAL.Entity;
-using Ecom.DAL.Repo.Abstraction;
-
-namespace Ecom.BLL.Service.Implementation
+﻿namespace Ecom.BLL.Service.Implementation
 {
     public class AddressService : IAddressService
     {
@@ -145,21 +140,19 @@ namespace Ecom.BLL.Service.Implementation
             {
                 // Get the tracked entity
                 var addressToDelete = await _addressRepo.GetByIdAsync(model.Id);
-                if (addressToDelete == null)
+                if (addressToDelete == null || addressToDelete.IsDeleted)
                 {
                     return new ResponseResult<bool>(false, "Address not found.", false);
                 }
 
-                // Delete the employee using the repo
+                // Delete the employee using the repo (soft delete)
                 bool result = await _addressRepo.ToggleDeleteStatusAsync(model.Id, model.DeletedBy); // Soft delete
-                // bool result = await _addressRepo.DeleteAsync(model.Id); // Hard delete
-
                 if (result)
                 {
                     return new ResponseResult<bool>(true, null, true);
                 }
 
-                return new ResponseResult<bool>(false, "Failed to toggle delete status.", false);
+                return new ResponseResult<bool>(false, "Failed to toggle address delete status.", false);
             }
             catch (Exception ex)
             {

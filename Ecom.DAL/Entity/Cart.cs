@@ -8,6 +8,7 @@ namespace Ecom.DAL.Entity
         public DateTime CreatedOn { get; private set; }
         public DateTime? UpdatedOn { get; private set; }
         public string? UpdatedBy { get; private set; }
+        public string? DeletedBy { get; private set; }
         public bool IsDeleted { get; private set; }
 
         // Computed properies (Not mapped to the database)
@@ -15,7 +16,7 @@ namespace Ecom.DAL.Entity
             .Sum(i => i.TotalPrice) ?? 0;
 
         // Foriegn Keys
-        public string AppUserId { get; private set; }
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
         public virtual AppUser AppUser { get; private set; } = null!;

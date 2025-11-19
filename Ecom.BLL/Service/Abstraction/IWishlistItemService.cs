@@ -19,8 +19,5 @@ namespace Ecom.BLL.Service.Abstraction
 
         // Get Delete Model
         Task<ResponseResult<DeleteWishlistItemVM>> GetDeleteModelAsync(int id);
-
-        // Add/Move to cart
-        Task<ResponseResult<bool>> AddToCartAsync(int id, string userId);
     }
 }

@@ -1,4 +1,7 @@
 
+using Ecom.DAL.Entity;
+using Microsoft.AspNetCore.Identity;
+
 namespace Ecom.PL
 {
     public class Program
@@ -10,13 +13,13 @@ namespace Ecom.PL
             // Add services to the container.
 
             // Database Context Configuration
-            //var connectionString = builder.Configuration.GetConnectionString("TemplateConnection");
-            //builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(connectionString));
+            var connectionString = builder.Configuration.GetConnectionString("defaultConnection");
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
             // In-Memory database for testing and development
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("MyDB"));
+            //builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseInMemoryDatabase("MyDB"));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,6 +44,24 @@ namespace Ecom.PL
             });
 
             var app = builder.Build();
+
+            //Run your seeder here
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    try
+            //    {
+            //        var context = services.GetRequiredService<ApplicationDbContext>();
+            //        var userManager = services.GetRequiredService<UserManager<AppUser>>();
+            //        // This one line creates the DB and seeds it
+            //        DbSeeder.Seed(context, userManager);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var logger = services.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(ex, "An error occurred during migration or seeding.");
+            //    }
+            //}
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

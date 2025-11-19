@@ -1,9 +1,5 @@
 ﻿
-using Azure.Core;
-using Ecom.DAL.Repo.Abstraction;
 using Ecom.DAL.Repo.Implementation;
-using Ecom.DAL.Repository.Implementation;
-using Tiers.DAL.Repo.Implementation;
 
 namespace Ecom.DAL.Common
 {
@@ -11,21 +7,7 @@ namespace Ecom.DAL.Common
     {
         public static IServiceCollection AddBusinessInDAL(this IServiceCollection services)
         {
-            // Add Identity service with cookie, later will be changed for JWT
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-                options =>
-                {
-                    options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Account/Login");
-
-                    // Cookie settings, added for security
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SameSite = SameSiteMode.Strict;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                });
-
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 // SignIn settings
                 options.SignIn.RequireConfirmedAccount = true;
@@ -47,17 +29,30 @@ namespace Ecom.DAL.Common
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders(); // Add all default token providers
-                                             //.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+                .AddDefaultTokenProviders() // Add all default token providers
+                .AddSignInManager<SignInManager<AppUser>>();
+                //.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+
+
+            // Add Identity service with cookie, later will be changed for JWT
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/Login");
+
+                    // Cookie settings, added for security
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                });
 
             services.AddScoped<IProductImageUrlRepo, ProductImageUrlRepo>();
-            //Dependency injection s oWhen a controller or service asks for an IProductImageUrlRepo,
-            // give them a new ProductImageUrlRepo instance for each HTTP request.
+            services.AddScoped<IBrandRepo, BrandRepo>();
+            services.AddScoped<IAccountRepo, AccountRepo>();
             services.AddScoped<IAddressRepo, AddressRepo>();
             services.AddScoped<IWishlistItemRepo, WishlistItemRepo>();
-
-
-
             return services;
         }
     }

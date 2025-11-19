@@ -1,6 +1,4 @@
 ﻿
-
-
 namespace Ecom.BLL.Service.Abstraction
 {
     public interface IProductImageUrlService

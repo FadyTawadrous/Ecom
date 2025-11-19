@@ -85,7 +85,6 @@
             {
                 return NotFound(); // 404
             }
-            itemToBeDeleted.Result.DeletedBy = "user"; //////
 
             var response = await _wishlistItemService.DeleteAsync(itemToBeDeleted.Result);// delete from Db
             if (response.IsSuccess)
