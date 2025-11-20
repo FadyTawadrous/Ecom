@@ -1,6 +1,4 @@
 ﻿
-using Ecom.DAL.Entity;
-
 namespace Ecom.BLL.ModelVM.Category
 {
     public class GetCategoryVM

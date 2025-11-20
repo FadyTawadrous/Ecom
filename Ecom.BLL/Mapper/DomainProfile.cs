@@ -48,10 +48,10 @@ namespace Ecom.BLL.Mapper
             CreateMap<CartItem, UpdateCartItemVM>().ReverseMap();
             // AddCartItemVM -> Cart 
             CreateMap<AddCartItemVM, CartItem>()
-                .ConstructUsing(vm => new CartItem(vm.ProductId, 
-                                                   vm.CartId, 
-                                                   vm.Quantity, 
-                                                   vm.UnitPrice, 
+                .ConstructUsing(vm => new CartItem(vm.ProductId,
+                                                   vm.CartId,
+                                                   vm.Quantity,
+                                                   vm.UnitPrice,
                                                    vm.CreatedBy));
 
             // Cart <-> DeleteCartItemVM
@@ -61,7 +61,7 @@ namespace Ecom.BLL.Mapper
             // ----------------------------------------
 
 
-
+            // Product Image URL Mappings
 
             CreateMap<ProductImageUrl, GetProductImageUrlVM>()
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Title : null));
@@ -95,6 +95,50 @@ namespace Ecom.BLL.Mapper
                 .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())
                 .ReverseMap();
 
+            // Address Mappings
+            CreateMap<CreateAddressVM, Address>()
+                .ConstructUsing(vm => new Address(
+                    vm.Street, vm.City, vm.Country, vm.PostalCode ?? string.Empty, vm.CreatedBy, vm.AppUserId
+                ));
+
+            CreateMap<UpdateAddressVM, Address>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+                .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.PostalCode))
+                .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
+                .ReverseMap();
+
+            CreateMap<DeleteAddressVM, Address>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.DeletedBy, opt => opt.MapFrom(src => src.DeletedBy))
+                .ReverseMap();
+
+            CreateMap<Address, GetAddressVM>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+                .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.PostalCode));
+
+            // WishlistItem Mappings
+            CreateMap<CreateWishlistItemVM, WishlistItem>()
+                .ConstructUsing(vm => new WishlistItem(
+                    vm.AppUserId, vm.ProductId, vm.CreatedBy
+                ));
+
+            CreateMap<DeleteWishlistItemVM, WishlistItem>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ReverseMap();
+
+            CreateMap<WishlistItem, GetWishlistItemVM>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
+                .ForMember(dest => dest.ProductTitle, opt => opt.MapFrom(src => src.Product.Title))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price))
+                .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => src.Product.ThumbnailUrl));
+
 
             // User Mappings
             // Maps from the RegisterUserVM to the AppUser entity
@@ -124,6 +168,5 @@ namespace Ecom.BLL.Mapper
             CreateMap<CreatePaymentVM, Payment>()
                 .ConstructUsing(vm => new Payment(vm.OrderId, vm.TotalAmount, vm.PaymentMethod, null, vm.CreatedBy!));
         }
-
     }
 }

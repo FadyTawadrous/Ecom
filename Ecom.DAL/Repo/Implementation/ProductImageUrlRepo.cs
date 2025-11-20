@@ -1,5 +1,5 @@
 ﻿
-namespace Ecom.DAL.Repository.Implementation
+namespace Ecom.DAL.Repo.Implementation
 {
     public class ProductImageUrlRepo : IProductImageUrlRepo
     {
@@ -61,8 +61,8 @@ namespace Ecom.DAL.Repository.Implementation
                 await _db.SaveChangesAsync();
                 return result.Entity.Id > 0;
 
-               // After saving, EF automatically fills Id(primary key).
-               //If it’s greater than 0 → insertion succeeded.
+                // After saving, EF automatically fills Id(primary key).
+                //If it’s greater than 0 → insertion succeeded.
             }
             catch (Exception)
             {
@@ -122,4 +122,3 @@ namespace Ecom.DAL.Repository.Implementation
         }
     }
 }
-

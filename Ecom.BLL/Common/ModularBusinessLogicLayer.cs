@@ -34,7 +34,9 @@ namespace Ecom.BLL.Common
 
             services.AddAuthorization(); // Adding Authorization services
 
-            services.AddScoped<IProductImageUrlService, ProductImageUrlService>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IWishlistItemService, WishlistItemService>();
+
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();

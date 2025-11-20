@@ -11,6 +11,5 @@ namespace Ecom.BLL.ModelVM.CartItem
         public string CartName { get; set; } = string.Empty;
         public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
-
     }
 }

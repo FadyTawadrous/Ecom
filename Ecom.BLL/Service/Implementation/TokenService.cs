@@ -1,6 +1,4 @@
 ﻿
-using System.Data;
-
 namespace Ecom.BLL.Service.Implementation
 {
     public class TokenService : ITokenService

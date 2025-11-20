@@ -1,6 +1,4 @@
 ﻿
-using Ecom.BLL.ModelVM.CartItem;
-
 namespace Ecom.BLL.ModelVM.Cart
 {
     public class GetCartVM

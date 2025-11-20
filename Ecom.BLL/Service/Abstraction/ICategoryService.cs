@@ -1,8 +1,4 @@
 ﻿
-using Ecom.BLL.ModelVM.Category;
-using Ecom.DAL.Entity;
-using System.Linq.Expressions;
-
 namespace Ecom.BLL.Service.Abstraction
 {
     public interface ICategoryService

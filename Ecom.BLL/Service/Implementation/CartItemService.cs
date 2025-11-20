@@ -1,8 +1,4 @@
 ﻿
-using Ecom.BLL.ModelVM.Cart;
-using Ecom.BLL.ModelVM.CartItem;
-using Ecom.DAL.Entity;
-
 namespace Ecom.BLL.Service.Implementation
 {
     public class CartItemService : ICartItemService

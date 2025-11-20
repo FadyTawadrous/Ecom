@@ -1,6 +1,4 @@
 ﻿
-using Ecom.BLL.ModelVM.CartItem;
-
 namespace Ecom.BLL.Service.Abstraction
 {
     public interface ICartItemService

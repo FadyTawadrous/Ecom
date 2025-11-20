@@ -8,7 +8,6 @@ namespace Ecom.BLL.ModelVM.CartItem
         public decimal UnitPrice { get; set; }
         public int CartId { get; set; }
         public int ProductId { get; set; }
-
         public string? UpdatedBy { get; set; }
     }
 }

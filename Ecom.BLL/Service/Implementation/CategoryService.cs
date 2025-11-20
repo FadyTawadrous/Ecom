@@ -1,10 +1,4 @@
 ﻿
-using Ecom.BLL.Helper;
-using Ecom.BLL.ModelVM.Category;
-using Ecom.BLL.Service.Abstraction;
-using Ecom.DAL.Entity;
-using Ecom.DAL.Repo.Abstraction;
-
 namespace Ecom.BLL.Service.Implementation
 {
     public class CategoryService : ICategoryService

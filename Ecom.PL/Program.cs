@@ -1,7 +1,4 @@
 
-using Ecom.DAL.Entity;
-using Microsoft.AspNetCore.Identity;
-
 namespace Ecom.PL
 {
     public class Program

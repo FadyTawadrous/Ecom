@@ -1,16 +1,10 @@
-﻿
-namespace Ecom.DAL.Entity
+﻿namespace Ecom.DAL.Entity
 {
     public class WishlistItem
     {
         public int Id { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
-        public DateTime? DeletedOn { get; private set; }
-        public string? DeletedBy { get; private set; }
-        public DateTime? UpdatedOn { get; private set; }
-        public string? UpdatedBy { get; private set; }
-        public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
         public string AppUserId { get; private set; } = null!;
@@ -28,20 +22,6 @@ namespace Ecom.DAL.Entity
             ProductId = productId;
             CreatedBy = createdBy;
             CreatedOn = DateTime.UtcNow;
-            IsDeleted = false;
         }
-
-        public bool ToggleDelete(string userModified)
-        {
-            if (!string.IsNullOrEmpty(userModified))
-            {
-                IsDeleted = !IsDeleted;
-                DeletedOn = DateTime.UtcNow;
-                DeletedBy = userModified;
-                return true;
-            }
-            return false;
-        }
-
     }
 }

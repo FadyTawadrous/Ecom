@@ -1,6 +1,4 @@
 ﻿
-using Ecom.DAL.Repo.Abstraction;
-
 namespace Ecom.DAL.Repo.Implementation
 {
     // Implementation of Category Repository

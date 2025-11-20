@@ -5,6 +5,7 @@ namespace Ecom.BLL.Service.Implementation
 {
     public class AccountService : IAccountService
     {
+        private readonly IAccountRepo _accountRepo;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IMapper _mapper;
@@ -12,12 +13,14 @@ namespace Ecom.BLL.Service.Implementation
         private readonly ICartService _cartService;
 
         public AccountService(
+            IAccountRepo accountRepo,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IMapper mapper,
             ITokenService tokenService,
             ICartService cartService)
         {
+            _accountRepo = accountRepo;
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;

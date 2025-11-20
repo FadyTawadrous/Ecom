@@ -1,9 +1,4 @@
-﻿using Azure;
-using Ecom.BLL.ModelVM.Brand;
-using Ecom.BLL.Service.Abstraction;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]

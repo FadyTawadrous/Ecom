@@ -1,6 +1,4 @@
 ﻿
-using Ecom.DAL.Repo.Implementation;
-
 namespace Ecom.DAL.Common
 {
     public static class ModularDataAccessLayer
@@ -41,6 +39,8 @@ namespace Ecom.DAL.Common
             services.AddScoped<IBrandRepo, BrandRepo>();
             services.AddScoped<IAccountRepo, AccountRepo>();
 
+            services.AddScoped<IAddressRepo, AddressRepo>();
+            services.AddScoped<IWishlistItemRepo, WishlistItemRepo>();
             services.AddScoped<ICategoryRepo, CategoryRepo>();
             services.AddScoped<ICartItemRepo, CartItemRepo>();
             services.AddScoped<ICartRepo, CartRepo>();

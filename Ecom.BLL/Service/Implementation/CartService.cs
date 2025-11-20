@@ -1,8 +1,4 @@
 ﻿
-using Ecom.BLL.ModelVM.Cart;
-using Ecom.BLL.ModelVM.Category;
-using Ecom.DAL.Entity;
-
 namespace Ecom.BLL.Service.Implementation
 {
     // Implementation of Cart Service

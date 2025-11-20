@@ -1,6 +1,4 @@
 ﻿
-using Microsoft.AspNetCore.Authorization;
-
 namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
