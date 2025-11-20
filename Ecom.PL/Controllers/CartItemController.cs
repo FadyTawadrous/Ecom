@@ -40,13 +40,14 @@ namespace Ecom.PL.Controllers
             var result = await _service.GetByCartIdAndProductIdAsync(cartId, productId);
 
             if (!result.IsSuccess)
-                return NotFound();
+                return NotFound(result);
 
             return Ok(result);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost]
-        public async Task<IActionResult> Add(AddCartItemVM model)
+        public async Task<IActionResult> Add([FromBody] AddCartItemVM model)
         {
             var result = await _service.AddAsync(model);
 
@@ -57,7 +58,7 @@ namespace Ecom.PL.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateCartItemVM model)
+        public async Task<IActionResult> Update([FromBody]UpdateCartItemVM model)
         {
             var result = await _service.UpdateAsync(model);
 
@@ -67,10 +68,10 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        [HttpPatch("toggle-delete")]
-        public async Task<IActionResult> ToggleDelete(DeleteCartItemVM model)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> ToggleDelete(int id)
         {
-            var result = await _service.DeleteAsync(model);
+            var result = await _service.DeleteAsync(id);
 
             if (!result.IsSuccess)
                 return NotFound();
@@ -78,15 +79,5 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> HardDelete(int id)
-        {
-            var result = await _service.HardDeleteAsync(new DeleteCartItemVM { Id = id });
-
-            if (!result.IsSuccess)
-                return NotFound();
-
-            return NoContent();
-        }
     }
 }

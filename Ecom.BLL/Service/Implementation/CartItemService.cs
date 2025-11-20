@@ -34,15 +34,17 @@ namespace Ecom.BLL.Service.Implementation
 
                     return new ResponseResult<bool>(true, "Quantity updated in existing CartItem", true);
                 }
+                
 
                 // Otherwise create a new cart item
-                var entity = _mapper.Map<CartItem>(model);
-                var created = await _cartItemRepo.AddAsync(entity);
+                var cartItem = _mapper.Map<CartItem>(model);
+                var created = await _cartItemRepo.AddAsync(cartItem);
 
                 if (!created)
                     return new ResponseResult<bool>(false, "Failed to add new CartItem", false);
 
                 return new ResponseResult<bool>(true, "CartItem created successfully", true);
+                
             }
             catch (Exception)
             {
@@ -129,37 +131,17 @@ namespace Ecom.BLL.Service.Implementation
         }
 
         // Hard Delete Cart Item
-        public async Task<ResponseResult<bool>> HardDeleteAsync(DeleteCartItemVM model)
+        public async Task<ResponseResult<bool>> DeleteAsync(int id)
         {
             try
             {
                 // Permanently deleting the cart Item from database
-                bool isDeleted = await _cartItemRepo.HardDeleteAsync(model.Id);
+                bool isDeleted = await _cartItemRepo.DeleteAsync(id);
                 if (isDeleted)
                 {
                     return new ResponseResult<bool>(true, "CartItem hard deleted successfully", true);
                 }
                 return new ResponseResult<bool>(false, "Failed to hard delete cartItem", false);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        // Soft Delete Cart Item
-        public async Task<ResponseResult<bool>> DeleteAsync(DeleteCartItemVM model)
-        {
-            try
-            {
-                // Toggling the IsDeleted status of the cart Item
-                bool isDeleted = await _cartItemRepo.ToggleDeleteAsync(model.Id, model.DeletedBy);
-                if (isDeleted)
-                {
-                    return new ResponseResult<bool>(true, "CartItem deleted successfully", true);
-                }
-                return new ResponseResult<bool>(false, "Failed to delete cartItem", false);
             }
             catch (Exception)
             {

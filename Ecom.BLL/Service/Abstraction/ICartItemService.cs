@@ -9,7 +9,7 @@ namespace Ecom.BLL.Service.Abstraction
 
         Task<ResponseResult<bool>> AddAsync(AddCartItemVM model);
         Task<ResponseResult<bool>> UpdateAsync(UpdateCartItemVM model);
-        Task<ResponseResult<bool>> HardDeleteAsync(DeleteCartItemVM model);
-        Task<ResponseResult<bool>> DeleteAsync(DeleteCartItemVM model);
+        Task<ResponseResult<bool>> DeleteAsync(int id);
     }
 }
+    

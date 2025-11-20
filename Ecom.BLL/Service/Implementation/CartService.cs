@@ -43,31 +43,6 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        // Delete Cart (Soft Delete)
-        public async Task<ResponseResult<bool>> DeleteAsync(DeleteCartVM model)
-        {
-            try
-            {
-                if (model.Id <= 0)
-                {
-                    return new ResponseResult<bool>(false, "Invalid Id", false);
-                }
-
-                // Toggling the IsDeleted status of the cart
-                bool isDeleted = await _cartRepo.ToggleDeleteAsync(model.Id, model.DeletedBy);
-                if (isDeleted)
-                {
-                    return new ResponseResult<bool>(true, "Cart deleted successfully", true);
-                }
-                return new ResponseResult<bool>(false, "Failed to delete cart", false);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
         // Get Cart by User ID
         public async Task<ResponseResult<GetCartVM>> GetByUserIdAsync(string UserId)
         {
@@ -113,7 +88,7 @@ namespace Ecom.BLL.Service.Implementation
                 if (id > 0)
                 {
                     // Getting cart by id
-                    var cart = await _cartRepo.GetByIdAsync(id);
+                    var cart = await _cartRepo.GetByIdAsync(id, c => c.CartItems!);
 
                     // Checking if cart exists and is not deleted
                     if (cart == null || cart.IsDeleted)
@@ -136,23 +111,22 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        // Hard Delete Cart
-        public async Task<ResponseResult<bool>> HardDeleteAsync(DeleteCartVM model)
+        // Clear Cart by ID
+        public async Task<ResponseResult<bool>> ClearCartAsync(int cartId)
         {
             try
             {
-                if (model.Id <= 0)
+                if(cartId > 0)
                 {
-                    return new ResponseResult<bool>(false, "Invalid Id", false);
+                    // Clearing cart
+                    bool isCleared = await _cartRepo.ClearCartAsync(cartId);
+                    if (isCleared)
+                    {
+                        return new ResponseResult<bool>(true, "Cart cleared successfully", true);
+                    }
+                    return new ResponseResult<bool>(false, "Failed to clear cart", false);
                 }
-
-                // Permanently deleting the cart from database
-                bool isDeleted = await _cartRepo.HardDeleteAsync(model.Id);
-                if (isDeleted)
-                {
-                    return new ResponseResult<bool>(true, "Cart hard deleted successfully", true);
-                }
-                return new ResponseResult<bool>(false, "Failed to hard delete cart", false);
+                return new ResponseResult<bool>(false, "Invalid Cart Id", false);
             }
             catch (Exception)
             {
@@ -161,34 +135,5 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        // Update Cart
-        public async Task<ResponseResult<bool>> UpdateAsync(UpdateCartVM model)
-        {
-            try
-            {
-                // Checking if the cart exists
-                var existing = await _cartRepo.GetByIdAsync(model.Id);
-                if (existing == null)
-                {
-                    return new ResponseResult<bool>(false, "Cart not found", false);
-                }
-
-                // mapping ViewModel to Entity
-                var cart = _mapper.Map<Cart>(model);
-
-                // Updating Cart in Database
-                bool isUpdated = await _cartRepo.UpdateAsync(cart);
-                if (isUpdated)
-                {
-                    return new ResponseResult<bool>(true, "Cart updated successfully", true);
-                }
-                return new ResponseResult<bool>(false, "Failed to update cart", false);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
     }
 }

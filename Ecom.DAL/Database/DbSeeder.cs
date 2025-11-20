@@ -11,26 +11,26 @@
                 // This blocks the thread until the database is created
                 //context.Database.Migrate();
 
-                // --- 2. Seed Admin User (Sync) ---
-                //if (!userManager.Users.Any(u => u.Email == "admin@ecom.com"))
-                //{
-                //    var adminUser = new AppUser(
-                //        email: "admin@ecom.com",
-                //        displayName: "Admin User",
-                //        profileImageUrl: null,
-                //        createdBy: "System",
-                //        phoneNumber: "123456789"
-                //    );
+                //---2.Seed Admin User(Sync) ---
+                if (!userManager.Users.Any(u => u.Email == "admin@ecom.com"))
+                {
+                    var adminUser = new AppUser(
+                        email: "admin@ecom.com",
+                        displayName: "Admin User",
+                        profileImageUrl: null,
+                        createdBy: "System",
+                        phoneNumber: "123456789"
+                    );
 
-                //    // Use the synchronous 'Create' and check the result
-                //    var result = userManager.CreateAsync(adminUser, "P@ssword123");
-                //    if (!result.Succeeded)
-                //    {
-                //        // Handle the error (e.g., password not strong enough)
-                //        throw new Exception("Failed to create admin user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
-                //    }
-                //    // Note: You would also add to "Admin" role here
-                //}
+                    // Use the synchronous 'Create' and check the result
+                    var result = userManager.CreateAsync(adminUser, "P@ssword123");
+                    if (!result.IsCompleted)
+                    {
+                        // Handle the error (e.g., password not strong enough)
+                        throw new Exception("Failed to create admin user: " /*+ string.Join(", ", result.Errors.Select(e => e.Description))*/);
+                    }
+                    // Note: You would also add to "Admin" role here
+                }
 
                 // --- 3. Seed a Test Brand (Sync) ---
                 if (!context.Brands.Any())

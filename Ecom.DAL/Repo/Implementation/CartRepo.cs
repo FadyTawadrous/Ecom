@@ -93,43 +93,15 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        // Delete an Existing Cart
-        // Returns true if Delete is successful, otherwise false
-        // Throws exception if an error occurs
-        public async Task<bool> HardDeleteAsync(int id)
+        public async Task<bool> ClearCartAsync(int cartId)
         {
             try
             {
-                var result = await _db.Carts.FirstOrDefaultAsync(c => c.Id == id);
-                if (result == null)
-                {
-                    return false;
-                }
-                _db.Carts.Remove(result);
-                await _db.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+                var cartItems = await _db.CartItems.Where(ci => ci.CartId == cartId).ToListAsync();
 
-        // Toggle Delete Status of a Cart
-        // Returns true if toggle is successful, otherwise false
-        // Throws exception if an error occurs
-        public async Task<bool> ToggleDeleteAsync(int id, string userModified)
-        {
-            try
-            {
-                var cart = await _db.Carts.FirstOrDefaultAsync(c => c.Id == id);
-                if (cart == null)
+                if (cartItems.Count > 0)
                 {
-                    return false;
-                }
-                bool result = cart.ToggleDelete(userModified);
-                if (result)
-                {
+                    _db.CartItems.RemoveRange(cartItems);
                     await _db.SaveChangesAsync();
                     return true;
                 }
@@ -142,34 +114,5 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        // Update an Existing Cart
-        // Returns true if update is successful, otherwise false
-        // Throws exception if an error occurs
-        public async Task<bool> UpdateAsync(Cart newCart)
-        {
-            try
-            {
-                if (newCart == null)
-                {
-                    return false;
-                }
-                var oldCart = await _db.Carts.FirstOrDefaultAsync(c => c.Id == newCart.Id);
-                if (oldCart == null)
-                {
-                    return false;
-                }
-                bool result = oldCart.Update(newCart.UpdatedBy);
-                if (result)
-                {
-                    await _db.SaveChangesAsync();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
     }
 }

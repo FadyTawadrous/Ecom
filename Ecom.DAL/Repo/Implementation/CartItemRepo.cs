@@ -44,11 +44,11 @@ namespace Ecom.DAL.Repo.Implementation
                                                                 && !c.IsDeleted);
 
                 var cartItem = await query.FirstOrDefaultAsync();
-                if (cartItem != null)
-                {
+               // if (cartItem != null)
+                //{
                     return cartItem;
-                }
-                throw new KeyNotFoundException($"CartItem with CartId {cartId} and ProductId {productId} not found.");
+                //}
+                //throw new KeyNotFoundException($"CartItem with CartId {cartId} and ProductId {productId} not found.");
             }
             catch (Exception)
             {
@@ -120,7 +120,7 @@ namespace Ecom.DAL.Repo.Implementation
         // Hard Delete a CartItem by its Id
         // Returns true if deletion is successful, otherwise false
         // Throws exception if an error occurs
-        public async Task<bool> HardDeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             try
             {
@@ -135,33 +135,6 @@ namespace Ecom.DAL.Repo.Implementation
             }
             catch (Exception)
             {
-                throw;
-            }
-        }
-
-        // Toggle the IsDeleted status of a CartItem
-        // Returns true if the operation is successful, otherwise false
-        // Throws exception if an error occurs
-        public async Task<bool> ToggleDeleteAsync(int id, string userModified)
-        {
-            try
-            {
-                var cartItem = await _db.CartItems.FirstOrDefaultAsync(c => c.Id == id);
-                if (cartItem == null)
-                {
-                    return false;
-                }
-                bool result = cartItem.ToggleDelete(userModified);
-                if (result)
-                {
-                    await _db.SaveChangesAsync();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-
                 throw;
             }
         }

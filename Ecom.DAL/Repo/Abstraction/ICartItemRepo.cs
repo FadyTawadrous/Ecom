@@ -11,7 +11,6 @@ namespace Ecom.DAL.Repo.Abstraction
         Task<CartItem> GetByCartIdAndProductIDAsync(int cartId, int productId);
         Task<bool> AddAsync(CartItem newCartItem);
         Task<bool> UpdateAsync(CartItem newCartItem);
-        Task<bool> HardDeleteAsync(int id);
-        Task<bool> ToggleDeleteAsync(int id, string userModified);
+        Task<bool> DeleteAsync(int id);
     }
 }

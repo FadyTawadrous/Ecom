@@ -15,8 +15,5 @@ namespace Ecom.BLL.ModelVM.Category
         public DateTime? UpdatedOn { get; set; }
         public string? UpdatedBy { get; set; }
         public bool IsDeleted { get; set; }
-
-        // Navigation Property - List of Products in this Category
-        public virtual ICollection<Product>? Products { get; private set; }
     }
 }
