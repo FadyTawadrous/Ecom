@@ -57,7 +57,7 @@ namespace Ecom.BLL.Service.Implementation
                     {
                         try
                         {
-                            uploadedImageUrl = await Upload.UploadFileAsync("ProductImages", model.Image);
+                            uploadedImageUrl = await Upload.UploadFileAsync("File/ProductImages", model.Image);
                         }
                         catch (Exception ex)
                         {
@@ -96,10 +96,10 @@ namespace Ecom.BLL.Service.Implementation
                     {
                         try
                         {
-                            newImageUrl = await Upload.UploadFileAsync("ProductImages", model.Image);
+                            newImageUrl = await Upload.UploadFileAsync("File/ProductImages", model.Image);
                             if (!string.IsNullOrEmpty(existing.ImageUrl))
                             {
-                                await Upload.RemoveFileAsync("ProductImages", existing.ImageUrl);
+                                await Upload.RemoveFileAsync("File/ProductImages", existing.ImageUrl);
                             }
                         }
                         catch (Exception ex)
@@ -135,7 +135,7 @@ namespace Ecom.BLL.Service.Implementation
 
                     if (!string.IsNullOrEmpty(existing.ImageUrl))
                     {
-                        await Upload.RemoveFileAsync("ProductImages", existing.ImageUrl);
+                        await Upload.RemoveFileAsync("File/ProductImages", existing.ImageUrl);
                     }
 
                     return new ResponseResult<bool>(true, null, true);

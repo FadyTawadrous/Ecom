@@ -97,6 +97,8 @@ namespace Ecom.DAL.Entity
             }
         }
 
+
+
         // This method tries to remove stock and returns true/false on success.
         // This prevents overselling.
 
@@ -115,6 +117,13 @@ namespace Ecom.DAL.Entity
 
             Stock -= quantityToDecrease;
             return true;
+        }
+
+        public void AddStock(int quantityToIncrease)
+        {
+            if (quantityToIncrease <= 0) return;
+
+            Stock += quantityToIncrease;
         }
 
         // This method adds to the sold quantity.

@@ -1,4 +1,3 @@
-﻿
 namespace Ecom.BLL.ModelVM.Category
 {
     public class GetCategoryVM
