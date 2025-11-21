@@ -47,6 +47,19 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                string? uploadedImageUrl = "default.png";
+                if (model.Image != null)
+                {
+                    try
+                    {
+                        uploadedImageUrl = await Upload.UploadFileAsync("Images/BrandImages", model.Image);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new ResponseResult<bool>(false, $"File upload failed: {ex.Message}", false);
+                    }
+                }
+                model.ImageUrl = uploadedImageUrl;
                 var brand = new Brand(model.Name, model.ImageUrl, model.CreatedBy);
                 await _brandRepo.AddAsync(brand);
                 await _brandRepo.SaveChangesAsync();
@@ -62,14 +75,34 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                var brand = await _brandRepo.GetByIdAsync(model.Id);
-                if (brand == null)
+                //Find Tracked Brand From Repo
+                var oldbrand = await _brandRepo.GetByIdAsync(model.Id);
+                if (oldbrand == null)
                     return new ResponseResult<bool>(false, "Brand not found.", false);
 
-                if (!brand.Update(model.Name, model.ImageUrl, model.UpdatedBy))
-                    return new ResponseResult<bool>(false, "Invalid update data.", false);
+                //handle Photo Upload
+                string? uploadedImageUrl = oldbrand.ImageUrl;
+                if (model.Image != null)
+                {
+                    try
+                    {
+                        uploadedImageUrl = await Upload.UploadFileAsync("Images/BrandImages", model.Image); // Upload image to server
+                        if (!string.IsNullOrEmpty(oldbrand.ImageUrl))
+                        {
+                            await Upload.RemoveFileAsync("Images", oldbrand.ImageUrl); // Remove old image if exists
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return new ResponseResult<bool>(false, $"File update failed: {ex.Message}", false);
+                    }
+                }
+                model.ImageUrl = uploadedImageUrl;
 
-                await _brandRepo.UpdateAsync(brand);
+                if (!oldbrand.Update(model.Name, model.ImageUrl, model.UpdatedBy))
+                    return new ResponseResult<bool>(false, "Invalid update data.", false);
+                //apply changes
+                await _brandRepo.UpdateAsync(oldbrand);
                 await _brandRepo.SaveChangesAsync();
                 return new ResponseResult<bool>(true, null, true);
             }

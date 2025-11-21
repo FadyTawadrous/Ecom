@@ -3,7 +3,7 @@ namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BrandController : ControllerBase
+    public class BrandController : BaseApiController
     {
         private readonly IBrandService _brandService;
 
@@ -33,10 +33,10 @@ namespace Ecom.PL.Controllers
             }
             return NoContent();
         }
-
-        [HttpPost("Create")]
+        [Authorize]
+        [HttpPost]
         
-        public async Task<IActionResult> Create([FromBody] CreateBrandVM model)
+        public async Task<IActionResult> Create([FromForm] CreateBrandVM model)
         {
             if (ModelState.IsValid)
             {
@@ -51,11 +51,11 @@ namespace Ecom.PL.Controllers
             return BadRequest("Invalid data.");
         }
 
-       
 
 
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateBrandVM model)
+        public async Task<IActionResult> Update(int id, [FromForm] UpdateBrandVM model)
         {
             if (id != model.Id)
             {
@@ -74,6 +74,7 @@ namespace Ecom.PL.Controllers
             return BadRequest("Invalid data.");
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -1,4 +1,7 @@
 
+using Ecom.DAL.Entity;
+using Microsoft.AspNetCore.Identity;
+
 namespace Ecom.PL
 {
     public class Program
@@ -42,45 +45,43 @@ namespace Ecom.PL
 
             var app = builder.Build();
 
-            // Run your seeder here
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    try
-            //    {
-            //        var context = services.GetRequiredService<ApplicationDbContext>();
-            //        var userManager = services.GetRequiredService<UserManager<AppUser>>();
-            //        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            //Run your seeder here
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            //        var adminUser = new AppUser(
-            //            email: "admin@ecom.com",
-            //            displayName: "Admin",
-            //            profileImageUrl: null,
-            //            createdBy: "System",
-            //            phoneNumber: null
-            //        )
-            //        {
-            //            EmailConfirmed = true // Confirm the email immediately
-            //        };
+                    var adminUser = new AppUser(
+                        email: "admin@ecom.com",
+                        displayName: "Admin",
+                        profileImageUrl: null,
+                        createdBy: "System",
+                        phoneNumber: null
+                    )
+                    {
+                        EmailConfirmed = true // Confirm the email immediately
+                    };
 
-            //        // Use UserManager to create the user, which handles hashing
-            //        userManager.CreateAsync(adminUser, "Admin@123").Wait();
+                    // Use UserManager to create the user, which handles hashing
+                    userManager.CreateAsync(adminUser, "Admin@123").Wait();
 
-            //        roleManager.CreateAsync(new IdentityRole("Admin")).Wait();
-            //        roleManager.CreateAsync(new IdentityRole("Customer")).Wait();
-            //        // Add the new user to the "Admin" role
-            //        userManager.AddToRoleAsync(adminUser, "Admin").Wait();
-            //        userManager.AddToRoleAsync(adminUser, "Customer").Wait();
-            //    }
-            //    // This one line creates the DB and seeds it
-            //    //DbSeeder.Seed(context, userManager);
 
-            //    catch (Exception ex)
-            //    {
-            //        var logger = services.GetRequiredService<ILogger<Program>>();
-            //        logger.LogError(ex, "An error occurred during migration or seeding.");
-            //    }
-            //}
+                    // Add the new user to the "Admin" role
+                    userManager.AddToRoleAsync(adminUser, "Admin").Wait();
+                }
+                // This one line creates the DB and seeds it
+                //DbSeeder.Seed(context, userManager);
+
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred during migration or seeding.");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -2,10 +2,12 @@ using Ecom.BLL.ModelVM.Cart;
 using Ecom.BLL.ModelVM.CartItem;
 using Ecom.BLL.ModelVM.Category;
 using Ecom.DAL.Entity;
-using Microsoft.AspNetCore.Identity; // Added based on usage of IdentityRole
+using Microsoft.AspNetCore.Identity; 
 using Ecom.BLL.ModelVM.Product;
 using Ecom.BLL.ModelVM.ProductReview;
-using AutoMapper; // Required for Profile
+using Ecom.BLL.ModelVM.Order;
+using Ecom.BLL.ModelVM.OrderItem;
+using AutoMapper; 
 
 namespace Ecom.BLL.Mapper
 {
@@ -192,6 +194,31 @@ namespace Ecom.BLL.Mapper
             // ## Role Mappings
             // ----------------------------------------
             CreateMap<IdentityRole, RoleVM>().ReverseMap();
+            // ----------------------------------------
+
+            // ----------------------------------------
+            // ## Order Mappings
+            // ----------------------------------------
+            CreateMap<Order, GetOrderVM>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.AppUser.UserName))
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderItems));
+
+            CreateMap<OrderItem, GetOrderItemVM>();
+
+            CreateMap<CreateOrderVM, Order>();
+
+            CreateMap<CreateOrderItemVM, OrderItem>();
+
+            CreateMap<UpdateOrderVM, Order>()
+                .ForAllMembers(opt => opt.Ignore());
+
+            // For mapping GetCartItemVM to OrderItem (converting cart to order)
+            CreateMap<GetCartItemVM, OrderItem>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
+                .ForMember(dest => dest.ProductTitle, opt => opt.MapFrom(src => src.ProductName))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+                .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice));
             // ----------------------------------------
 
             // ----------------------------------------
