@@ -1,5 +1,6 @@
 
 using Ecom.DAL.Entity;
+using Ecom.DAL.Seeding;
 using Microsoft.AspNetCore.Identity;
 
 namespace Ecom.PL
@@ -46,42 +47,23 @@ namespace Ecom.PL
             var app = builder.Build();
 
             //Run your seeder here
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
-                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    try
+            //    {
+            //        var context = services.GetRequiredService<ApplicationDbContext>();
+            //        var userManager = services.GetRequiredService<UserManager<AppUser>>();
+            //        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                    var adminUser = new AppUser(
-                        email: "admin@ecom.com",
-                        displayName: "Admin",
-                        profileImageUrl: null,
-                        createdBy: "System",
-                        phoneNumber: null
-                    )
-                    {
-                        EmailConfirmed = true // Confirm the email immediately
-                    };
-
-                    // Use UserManager to create the user, which handles hashing
-                    userManager.CreateAsync(adminUser, "Admin@123").Wait();
-
-
-                    // Add the new user to the "Admin" role
-                    userManager.AddToRoleAsync(adminUser, "Admin").Wait();
-                }
-                // This one line creates the DB and seeds it
-                //DbSeeder.Seed(context, userManager);
-
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred during migration or seeding.");
-                }
-            }
+            //        Seeder.SeedAsync(context, userManager, roleManager).Wait();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var logger = services.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(ex, "An error occurred during migration or seeding.");
+            //    }
+            //}
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -101,29 +83,6 @@ namespace Ecom.PL
 
             app.MapControllers();
 
-
-            //// Seeding initial data
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            //    context.Database.EnsureCreated();
-
-            //    if (!context.Departments.Any() && !context.Employees.Any())
-            //    {
-            //        var hr = new Department("HR", "Cairo", "Fady");
-            //        var it = new Department("IT", "Alex", "Ahmed");
-
-            //        context.Departments.AddRange(hr, it);
-            //        context.SaveChanges();
-
-            //        context.Employees.AddRange(
-            //        new Employee("Fady", 20000, 30, "testpic.png", hr.Id, "Admin"),
-            //        new Employee("Ahmed", 46000, 28, "testpic2.JPG", it.Id, "Admin2"),
-            //        new Employee("Sara", 88000, 26, "testpic.png", hr.Id, "Admin")
-            //        );
-            //        context.SaveChanges();
-            //    }
-            //}
 
             app.Run();
         }

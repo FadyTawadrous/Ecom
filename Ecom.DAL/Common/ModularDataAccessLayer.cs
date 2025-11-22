@@ -1,8 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Ecom.DAL.Entity;
-using Ecom.DAL.Data;
-using Ecom.DAL.Repository; 
 // Note: Ensure you have the correct using statements for your specific Repo classes
 
 namespace Ecom.DAL.Common

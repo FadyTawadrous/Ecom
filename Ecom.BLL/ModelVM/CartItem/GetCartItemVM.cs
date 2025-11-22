@@ -9,6 +9,7 @@ namespace Ecom.BLL.ModelVM.CartItem
         public decimal TotalPrice { get; set; }
         public int CartId { get; set; }
         public int ProductId { get; set; }
+        public string? ProductName { get; set; }
 
 
         // Audit Fields for dashboard display

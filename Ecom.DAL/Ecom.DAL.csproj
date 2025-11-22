@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,9 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+
   <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="SP\" />
+	  <Folder Include="Migrations\" />
+	  <Folder Include="SP\" />
   </ItemGroup>
 
   <ItemGroup>
