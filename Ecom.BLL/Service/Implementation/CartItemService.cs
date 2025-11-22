@@ -4,12 +4,14 @@ namespace Ecom.BLL.Service.Implementation
     public class CartItemService : ICartItemService
     {
         private readonly ICartItemRepo _cartItemRepo;
+        private readonly IProductService _productService;
         private readonly IMapper _mapper;
 
-        public CartItemService(ICartItemRepo cartItemRepo, IMapper mapper)
+        public CartItemService(ICartItemRepo cartItemRepo, IMapper mapper, IProductService productService)
         {
             _cartItemRepo = cartItemRepo;
             _mapper = mapper;
+            _productService = productService;
         }
 
         // Add CArt Item
@@ -17,34 +19,41 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                // Check if product already exists in the cart
+                // 1- Check if product already exists in the cart
                 var existing = await _cartItemRepo
                     .GetByCartIdAndProductIDAsync(model.CartId, model.ProductId);
 
+                // 2-  If exists, update the quantity
                 if (existing != null)
                 {
-                    // Business rule: Increase quantity
                     existing.Update(
                         existing.Quantity + model.Quantity,
                         model.UnitPrice,
                         model.CreatedBy
                     );
 
-                    await _cartItemRepo.UpdateAsync(existing);
-
-                    return new ResponseResult<bool>(true, "Quantity updated in existing CartItem", true);
+                    var isUpdated = await _cartItemRepo.UpdateAsync(existing);
+                    if (isUpdated)
+                    {
+                        // Decrease stock accordingly
+                        var result = await _productService.DecreaseStockAsync(model.ProductId, model.Quantity);
+                        if (result != null)
+                            return new ResponseResult<bool>(true, "Quantity updated in existing CartItem and stock decreased", true);
+                        else
+                            return new ResponseResult<bool>(false, "Quantity updated in existing CartItem but failed to decrease stock", false);
+                    }
                 }
-                
 
-                // Otherwise create a new cart item
+
+                // 3- If not exists, create a new cart item
                 var cartItem = _mapper.Map<CartItem>(model);
                 var created = await _cartItemRepo.AddAsync(cartItem);
 
-                if (!created)
-                    return new ResponseResult<bool>(false, "Failed to add new CartItem", false);
-
-                return new ResponseResult<bool>(true, "CartItem created successfully", true);
-                
+                if (created)
+                {
+                    return new ResponseResult<bool>(true, "CartItem created successfully", true);
+                }
+                return new ResponseResult<bool>(false, "Failed to add new CartItem", false);
             }
             catch (Exception)
             {
@@ -135,11 +144,25 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                // Permanently deleting the cart Item from database
+                // Checking if the cart item exists
+                var model = await _cartItemRepo.GetByIdAsync(id, c => c.Product, c => c.Cart);
+                if (model == null)
+                {
+                    return new ResponseResult<bool>(false, "CartItem not found", false);
+                }
+
+                // Deleting Cart Item from Database
                 bool isDeleted = await _cartItemRepo.DeleteAsync(id);
+
+                // If deleted, increase the stock accordingly
                 if (isDeleted)
                 {
-                    return new ResponseResult<bool>(true, "CartItem hard deleted successfully", true);
+                    var result = await _productService.IncreaseStockAsync(model.ProductId, model.Quantity);
+                    if(result != null)
+                    {
+                        return new ResponseResult<bool>(true, "CartItem hard deleted successfully and stock increased", true);
+                    }
+                    return new ResponseResult<bool>(true, "CartItem hard deleted successfully but failed to increase stock", true);
                 }
                 return new ResponseResult<bool>(false, "Failed to hard delete cartItem", false);
             }

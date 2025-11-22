@@ -1,4 +1,3 @@
-﻿
 namespace Ecom.BLL.ModelVM.CartItem
 {
     public class GetCartItemVM
@@ -11,7 +10,6 @@ namespace Ecom.BLL.ModelVM.CartItem
         public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
 
-
         // Audit Fields for dashboard display
         public string? CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -20,6 +18,5 @@ namespace Ecom.BLL.ModelVM.CartItem
         public DateTime? UpdatedOn { get; set; }
         public string? UpdatedBy { get; set; }
         public bool IsDeleted { get; set; }
-
     }
 }

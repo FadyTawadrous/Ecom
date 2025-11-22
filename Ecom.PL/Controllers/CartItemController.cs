@@ -7,6 +7,7 @@ namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CartItemController : ControllerBase
     {
         private readonly ICartItemService _service;
@@ -69,7 +70,7 @@ namespace Ecom.PL.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> ToggleDelete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);
 

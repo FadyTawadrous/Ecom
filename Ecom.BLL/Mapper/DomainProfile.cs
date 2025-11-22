@@ -22,9 +22,9 @@ namespace Ecom.BLL.Mapper
                 .ConstructUsing(vm => new Category(vm.Name!, vm.ImageUrl!, vm.CreatedBy!));
 
             CreateMap<Category, UpdateCategoryVM>().ReverseMap();
-            
+            // Category <-> GetCategoryVM
             CreateMap<Category, GetCategoryVM>().ReverseMap();
-            
+            // Category <-> DeleteCategoryVM
             CreateMap<Category, DeleteCategoryVM>().ReverseMap();
             // ----------------------------------------
 

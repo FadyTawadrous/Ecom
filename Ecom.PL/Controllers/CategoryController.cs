@@ -7,7 +7,6 @@ namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _service;
@@ -17,7 +16,6 @@ namespace Ecom.PL.Controllers
             _service = service;
         }
 
-        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -30,7 +28,6 @@ namespace Ecom.PL.Controllers
             return StatusCode(500, result);
         }
 
-        //[Authorize(Roles = "Admin")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -42,7 +39,7 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]AddCategoryVM model)
         {
@@ -57,7 +54,7 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody]UpdateCategoryVM model)
         {
@@ -72,7 +69,7 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPatch("toggle-delete")]
         public async Task<IActionResult> ToggleDelete(DeleteCategoryVM model)
         {
@@ -84,7 +81,7 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> HardDelete(int id)
         {
