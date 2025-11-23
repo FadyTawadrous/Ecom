@@ -341,6 +341,41 @@ namespace Ecom.DAL.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Ecom.DAL.Entity.FaceId", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Encoding")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("FaceIds");
+                });
+
             modelBuilder.Entity("Ecom.DAL.Entity.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -873,6 +908,17 @@ namespace Ecom.DAL.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Ecom.DAL.Entity.FaceId", b =>
+                {
+                    b.HasOne("Ecom.DAL.Entity.AppUser", "AppUser")
+                        .WithMany("FaceIds")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Ecom.DAL.Entity.Order", b =>
                 {
                     b.HasOne("Ecom.DAL.Entity.AppUser", "AppUser")
@@ -1038,6 +1084,8 @@ namespace Ecom.DAL.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Cart");
+
+                    b.Navigation("FaceIds");
 
                     b.Navigation("Orders");
 

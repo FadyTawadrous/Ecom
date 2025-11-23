@@ -172,10 +172,5 @@ namespace Ecom.DAL.Repo.Implementation
                 throw;
             }
         }
-
-        public Task<bool> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

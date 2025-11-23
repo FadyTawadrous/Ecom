@@ -9,7 +9,8 @@ namespace Ecom.BLL.ModelVM.CartItem
         public decimal TotalPrice { get; set; }
         public int CartId { get; set; }
         public int ProductId { get; set; }
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
+
         // Audit Fields for dashboard display
         public string? CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

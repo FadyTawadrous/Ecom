@@ -20,6 +20,7 @@ namespace Ecom.DAL.Entity
         public virtual ICollection<Address>? Addresses { get; private set; }
         public virtual ICollection<ProductReview>? ProductReviews { get; private set; }
         public virtual ICollection<WishlistItem>? WishlistItems { get; private set; }
+        public virtual ICollection<FaceId>? FaceIds { get; private set; }
 
         // Logic
         public AppUser() { }

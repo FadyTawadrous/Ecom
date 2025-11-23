@@ -29,5 +29,25 @@
 
 		<ItemGroup>
 			<Folder Include="Files\Images\ProductThumbnail\" />
+			<Folder Include="Models\FaceModels\" />
+		</ItemGroup>
+
+
+
+
+
+		<ItemGroup>
+		  <None Update="Models\FaceModels\dlib_face_recognition_resnet_model_v1.dat">
+		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  </None>
+		  <None Update="Models\FaceModels\mmod_human_face_detector.dat">
+		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  </None>
+		  <None Update="Models\FaceModels\shape_predictor_5_face_landmarks.dat">
+		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  </None>
+		  <None Update="Models\FaceModels\shape_predictor_68_face_landmarks.dat">
+		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  </None>
 		</ItemGroup>
 </Project>
