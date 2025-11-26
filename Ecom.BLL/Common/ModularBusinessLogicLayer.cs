@@ -1,9 +1,10 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using Ecom.BLL.Mapper;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Ecom.BLL.Mapper;
 // Note: Ensure you have the correct using statements for your specific Service classes
 
 
@@ -37,6 +38,34 @@ namespace Ecom.BLL.Common
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ClockSkew = TimeSpan.FromSeconds(5)
                 };
+            })
+            // External Authentication Providers
+            .AddGoogle(options =>
+            {
+                options.ClientId = configuration["Authentication:Google:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+
+                // Request additional scopes from Google like profile and email
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+
+                // Save tokens the authentication cookie
+                options.SaveTokens = true;
+            })
+            .AddFacebook(options =>
+            {
+                options.AppId = configuration["Authentication:Facebook:AppId"]!;
+                options.AppSecret = configuration["Authentication:Facebook:AppSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                options.SaveTokens = true;
+            })
+            .AddMicrosoftAccount(options =>
+            {
+                options.ClientId = configuration["Authentication:Microsoft:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                options.SaveTokens = true;
             });
 
             services.AddAuthorization();

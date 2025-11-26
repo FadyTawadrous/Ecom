@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Authentication;
+
 namespace Ecom.BLL.Service.Abstraction
 {
     public interface IAccountService
@@ -37,5 +39,11 @@ namespace Ecom.BLL.Service.Abstraction
 
         // Change Password
         //Task<ResponseResult<bool>> ChangePasswordAsync(string userId, ChangePasswordVM model);
+
+        // External Login
+        ResponseResult<AuthenticationProperties> GetExternalLoginProperties(string provider, string returnUrl);
+
+        // External Login Callback
+        Task<ResponseResult<AuthResponseVM>> ExternalLoginCallbackAsync();
     }
 }

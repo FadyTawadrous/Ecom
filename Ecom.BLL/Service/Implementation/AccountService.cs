@@ -1,5 +1,7 @@
 ﻿
 using Ecom.BLL.ModelVM.Cart;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Ecom.BLL.Service.Implementation
 {
@@ -297,6 +299,118 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
+
+        // External Authentication
+        public ResponseResult<AuthenticationProperties> GetExternalLoginProperties(string provider, string redirectUrl)
+        {
+            try
+            {
+                // 1- Validate authentication provider
+                if (string.IsNullOrEmpty(provider))
+                    return new ResponseResult<AuthenticationProperties>(null, "Provider not specified", false);
+
+                // 2- Configure the authentication properties (provider and Backend redirectUrl after successful login)
+                var authProperties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+                return new ResponseResult<AuthenticationProperties>(authProperties, null, true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<AuthenticationProperties>(null, ex.Message, false);
+            }
+        }
+
+
+        public async Task<ResponseResult<AuthResponseVM>> ExternalLoginCallbackAsync()
+        {
+            try
+            {
+                // 1. Get external login info from the provider
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                    return new ResponseResult<AuthResponseVM>(null, "External login failed", false);
+
+                // 2. Check if a user already exists with this login provider
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                if (user == null)
+                {
+                    // 3. If not, create a new AppUser using info from the provider
+                    string email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? Guid.NewGuid().ToString() + "@temp.com";
+                    string displayName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "New User";
+                    string? uploadedImageUrl = "default.png"; // use default image
+
+                    user = new AppUser(email, displayName, uploadedImageUrl, email, null); // created by same user's email
+                    user.EmailConfirmed = true;
+
+                    // 4. Create user in Identity
+                    var createResult = await _userManager.CreateAsync(user);
+                    if (!createResult.Succeeded)
+                    {
+                        var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                        return new ResponseResult<AuthResponseVM>(null, errors, false);
+                    }
+
+                    // 5. Add external login info
+                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
+                    if (!addLoginResult.Succeeded)
+                    {
+                        var errors = string.Join(", ", addLoginResult.Errors.Select(e => e.Description));
+                        return new ResponseResult<AuthResponseVM>(null, errors, false);
+                    }
+
+                    // 6. Assign default role to the new user
+                    var addToRoleResult = await _userManager.AddToRoleAsync(user, "Customer");
+                    if (!addToRoleResult.Succeeded)
+                    {
+                        var errors = string.Join(", ", addToRoleResult.Errors.Select(e => e.Description));
+                        return new ResponseResult<AuthResponseVM>(null, errors, false);
+                    }
+
+                    // 7. Call the cart service to create a cart for the new user
+                    var addCartVM = new AddCartVM
+                    {
+                        AppUserId = user.Id,
+                        CreatedBy = user.Email!
+                    };
+                    var createCartResult = await _cartService.AddAsync(addCartVM);
+                    if (!createCartResult.IsSuccess)
+                    {
+                        return new ResponseResult<AuthResponseVM>(null, "User created but failed to create cart: " + createCartResult.ErrorMessage, false);
+                    }                    
+                }                
+
+                // Reactivate user if previously deleted
+                if (user.IsDeleted)
+                {
+                    user.ToggleDelete(user.Email);
+                    var result = await _userManager.UpdateAsync(user);
+                    if (!result.Succeeded)
+                    {
+                        var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                        return new ResponseResult<AuthResponseVM>(null, errors, false);
+                    }
+                }
+
+                // Generate JWT token using your TokenService
+                var token = await _tokenService.CreateToken(user);
+
+                // Map AppUser to GetUserVM
+                var userVM = _mapper.Map<GetUserVM>(user);
+
+                // Return AuthResponseVM
+                var authResponse = new AuthResponseVM // Create AuthresponseVM
+                {
+                    User = userVM,
+                    Token = token,
+                    TokenExpiration = DateTime.UtcNow.AddDays(7)
+                };
+                return new ResponseResult<AuthResponseVM>(authResponse, null, true);                    
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<AuthResponseVM>(null, ex.Message, false);
+            }
+        }
 
     }
 }
