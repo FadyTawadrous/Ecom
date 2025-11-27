@@ -24,18 +24,7 @@ namespace Ecom.BLL.Service.Implementation
             this.cartService = cartService;
             this.productService = productService;
         }
-        //public async Task<ResponseResult<bool>> AddItemAsync(int orderId, CreateOrderItemVM itemVM)
-        //{
-        //    try
-        //    {
-        //        //var result = await orderRepo.AddAsync(orderId, itemVM);
-        //        return new ResponseResult<bool>(false, null, false);
-
-        //    }
-        //    catch (Exception ex) { 
-        //    return new ResponseResult<bool>(false, ex.Message, false);
-        //    }
-        //}
+        
 
         public async Task<ResponseResult<GetOrderVM>> CreateOrderAsync(string userId,string shippingAddress)
         {
@@ -59,7 +48,7 @@ namespace Ecom.BLL.Service.Implementation
                         item.Quantity,
                         item.UnitPrice,
                         userId,
-                        ProductName     // snapshot title need fix
+                        ProductName     // snapshot title From ProductService
                     );
 
                     order.AddItem(orderItem); // This recalculates total each add
@@ -103,8 +92,9 @@ namespace Ecom.BLL.Service.Implementation
                 {
                     foreach(var item in OrderToBeCanceled.Result.Items)
                     {
+                        //returns Each Item in Order To Stock
                         var OrderItemReturn = await productService.IncreaseStockAsync(item.ProductId, item.Quantity);
-                        if (OrderItemReturn == null)
+                        if (OrderItemReturn.Result == false)
                         {
                             throw new Exception(OrderItemReturn.ErrorMessage);
                         }
@@ -166,15 +156,7 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        //public Task<ResponseResult<bool>> RemoveItemAsync(int orderId, int itemId, string userId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<ResponseResult<bool>> UpdateItemQuantityAsync(int orderId, int itemId, int newQuantity, string userId)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
 
         public async Task<ResponseResult<bool>> UpdateStatusAsync(int id, OrderStatus newStatus, string updatedBy)
         {

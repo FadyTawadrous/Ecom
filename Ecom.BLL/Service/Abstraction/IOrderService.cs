@@ -25,11 +25,7 @@ namespace Ecom.BLL.Service.Abstraction
         // UPDATE STATUS
         Task<ResponseResult<bool>> UpdateStatusAsync(int id, OrderStatus newStatus, string updatedBy);
 
-        // ORDER ITEM OPERATIONS
-        //Task<ResponseResult<bool>> AddItemAsync(int orderId, CreateOrderItemVM itemVM);
-        //Task<ResponseResult<bool>> RemoveItemAsync(int orderId, int itemId, string userId);
-        //Task<ResponseResult<bool>> UpdateItemQuantityAsync(int orderId, int itemId, int newQuantity, string userId);
-
+        
         // DELETE (soft delete)
         Task<ResponseResult<bool>> DeleteAsync(int id, string userId);
 

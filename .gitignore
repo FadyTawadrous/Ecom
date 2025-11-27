@@ -363,5 +363,15 @@ MigrationBackup/
 FodyWeavers.xsd
 
 src/Ecom.DAL/Migrations/
+src/Ecom.PL/appsettings.json
+src/Ecom.PL/appsettings.Development.json
 
 Ecom.DAL/Migrations/
+/Ecom.PL/appsettings.json
+/.gitignore
+/.gitignore
+/.gitignore
+/.gitignore
+/.gitignore
+/.gitignore
+/Ecom.PL/appsettings.json
