@@ -110,12 +110,14 @@ namespace Ecom.BLL.Common
             services.AddScoped<ICartItemService, CartItemService>();
             services.AddScoped<ICartService, CartService>();
             
-            services.AddScoped<IPaymentService, PaymentService>();
+            
 
             // Resolved Conflict: Included both Order and Review services
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();
+
+            services.AddScoped<IPaymentService, PaymentService>();
 
             services.AddScoped<IFaceIdService, FaceIdService>();
 
