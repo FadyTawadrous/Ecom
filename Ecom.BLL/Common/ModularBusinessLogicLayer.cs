@@ -1,13 +1,5 @@
-using Ecom.BLL.Mapper;
 using FaceRecognitionDotNet;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity; // Required for IdentityConstants
-using System.Text;
-using Ecom.BLL.Services; 
+
 // Note: Ensure you have the correct using statements for your specific Service classes
 
 namespace Ecom.BLL.Common
