@@ -12,5 +12,6 @@ namespace Ecom.BLL.ModelVM.Payment
 
         [Required]
         public PaymentStatus Status { get; set; }
+
     }
 }

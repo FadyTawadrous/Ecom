@@ -11,7 +11,6 @@ namespace Ecom.BLL.ModelVM.Payment
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
 
-        [Required]
         public decimal TotalAmount { get; set; }
 
         public string? CreatedBy { get; set; }

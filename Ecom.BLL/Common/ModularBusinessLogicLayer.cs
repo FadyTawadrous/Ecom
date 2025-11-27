@@ -1,9 +1,12 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using Ecom.BLL.Mapper;
+using FaceRecognitionDotNet;
+using Ecom.BLL.Mapper;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Ecom.BLL.Mapper;
 // Note: Ensure you have the correct using statements for your specific Service classes
 
 
@@ -37,7 +40,57 @@ namespace Ecom.BLL.Common
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ClockSkew = TimeSpan.FromSeconds(5)
                 };
+            })
+            // External Authentication Providers
+            .AddGoogle(options =>
+            {
+                options.ClientId = configuration["Authentication:Google:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+
+                // Request additional scopes from Google like profile and email
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+
+                // Save tokens the authentication cookie
+                options.SaveTokens = true;
+            })
+            .AddFacebook(options =>
+            {
+                options.AppId = configuration["Authentication:Facebook:AppId"]!;
+                options.AppSecret = configuration["Authentication:Facebook:AppSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                options.SaveTokens = true;
+            })
+            .AddMicrosoftAccount(options =>
+            {
+                options.ClientId = configuration["Authentication:Microsoft:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                options.SaveTokens = true;
             });
+
+            // Face Recognition Service
+            // Ensure that FaceModelsPath is set in configuration
+            // Example: "FaceModelsPath": "path/to/face/models"
+            // This path should point to the directory containing the face recognition models
+            services.AddSingleton<FaceRecognition>(provider =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
+
+                // base dir = bin\Debug\net8.0
+                var baseDir = AppContext.BaseDirectory;
+                var relative = config["FaceModelsPath"] ?? "Models/FaceModels";
+                var modelsPath = Path.Combine(baseDir, relative);
+
+                if (!Directory.Exists(modelsPath))
+                {
+                    throw new DirectoryNotFoundException($"FaceModelsPath not found: {modelsPath}");
+                }
+
+                return FaceRecognition.Create(modelsPath);
+            });
+
 
             services.AddAuthorization();
 
@@ -57,12 +110,14 @@ namespace Ecom.BLL.Common
             services.AddScoped<ICartItemService, CartItemService>();
             services.AddScoped<ICartService, CartService>();
             
-            // services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             // Resolved Conflict: Included both Order and Review services
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();
+
+            services.AddScoped<IFaceIdService, FaceIdService>();
 
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();

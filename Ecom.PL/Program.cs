@@ -31,6 +31,7 @@ namespace Ecom.PL
             builder.Services.AddBusinessInDAL();
             builder.Services.AddBusinessInBLL(builder.Configuration);
 
+
             // Add CORS Policy
             var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")!.Split(",");
             builder.Services.AddCors(options =>

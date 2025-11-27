@@ -1,4 +1,7 @@
 ﻿
+using Azure;
+using Microsoft.AspNetCore.Identity;
+
 namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
@@ -150,6 +153,47 @@ namespace Ecom.PL.Controllers
                 return BadRequest(new { message = response.ErrorMessage });
             }
             return Ok(response.Result);
+        }
+
+
+        // 8. External Login (Google, Facebook, Microsoft)
+        [AllowAnonymous]
+        [HttpGet("external-login")]
+        public IActionResult ExternalLogin([FromQuery] string provider, [FromQuery] string? returnUrl = null)
+        {
+            // 1- Build the callback URL (where Google/Facebook will redirect back to)
+            var callbackUrl = Url.Action("ExternalLoginCallback", "Account",
+                new { returnUrl }, // returnUrl passed in query parameters of URL later if any
+                Request.Scheme);
+
+            // 2- Get the authentication properties required by authentication provider
+            var response = _accountService.GetExternalLoginProperties(provider, callbackUrl);
+            if (!response.IsSuccess)
+                return BadRequest(new { message = response.ErrorMessage });
+
+            // 3- Challenge triggers the redirect to the external provider (Google, Facebook, etc.) login page
+            return new ChallengeResult(provider, response.Result);
+        }
+
+        // Callback from external provider
+        [AllowAnonymous]
+        [HttpGet("external-login-callback")]
+        public async Task<IActionResult> ExternalLoginCallback([FromQuery] string? returnUrl = null)
+        {
+            var result = await _accountService.ExternalLoginCallbackAsync();
+
+            if (!result.IsSuccess)
+            {
+                return Redirect($"{returnUrl}?error={Uri.EscapeDataString(result.ErrorMessage)}");
+            }
+
+            // Redirect to frontend with token
+            var token = result.Result.Token;
+            var userJson = Uri.EscapeDataString(
+                System.Text.Json.JsonSerializer.Serialize(result.Result.User)
+            );
+
+            return Redirect($"{returnUrl}?token={token}&user={userJson}");
         }
 
     }

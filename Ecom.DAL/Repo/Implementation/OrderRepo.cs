@@ -34,7 +34,7 @@ namespace Ecom.DAL.Repo.Implementation
 
         public async Task<Order?> GetByIdAsync(int id)
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders.Where(i => i.Id == id).Include(o => o.OrderItems).FirstOrDefaultAsync();
         }
 
         public async Task<Order?> GetByOrderNumberAsync(string orderNumber)

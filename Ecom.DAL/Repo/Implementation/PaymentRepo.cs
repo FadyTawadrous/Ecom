@@ -1,4 +1,6 @@
 ﻿
+using Ecom.DAL.Entity;
+
 namespace Ecom.DAL.Repo.Implementation
 {
     public class PaymentRepo : IPaymentRepo
@@ -99,29 +101,14 @@ namespace Ecom.DAL.Repo.Implementation
         {
             try
             {
-                if (newPayment == null)
-                {
-                    return false;
-                }
-
-                var oldPayment = await _context.Payments.FindAsync(newPayment.Id);
-                if (oldPayment == null)
-                {
-                    return false;
-                }
-
-                bool result = oldPayment.Update(newPayment.TransactionId, newPayment.UpdatedBy!, newPayment.Status);
-                if (result)
-                {
-                    await _context.SaveChangesAsync();
-                    return true;
-                }
-                return false;
+                _context.Payments.Update(newPayment);
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception)
             {
 
-                throw;
+                return false;
             }
         }
 

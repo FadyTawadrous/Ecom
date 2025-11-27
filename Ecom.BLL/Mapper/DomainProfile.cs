@@ -1,13 +1,14 @@
-﻿using Ecom.BLL.ModelVM.Cart;
+using AutoMapper;
+using Ecom.BLL.ModelVM.Cart;
 using Ecom.BLL.ModelVM.CartItem;
 using Ecom.BLL.ModelVM.Category;
+using Ecom.BLL.ModelVM.FaceId;
 using Ecom.DAL.Entity;
 using Microsoft.AspNetCore.Identity;
 using Ecom.BLL.ModelVM.Product;
 using Ecom.BLL.ModelVM.ProductReview;
 using Ecom.BLL.ModelVM.Order;
 using Ecom.BLL.ModelVM.OrderItem;
-using AutoMapper;
 
 namespace Ecom.BLL.Mapper
 {
@@ -43,7 +44,8 @@ namespace Ecom.BLL.Mapper
             // ----------------------------------------
             // ## Cart Item Mappings
             // ----------------------------------------
-            CreateMap<CartItem, GetCartItemVM>().ReverseMap();
+            CreateMap<CartItem, GetCartItemVM>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Title));
             CreateMap<CartItem, UpdateCartItemVM>().ReverseMap();
 
             CreateMap<AddCartItemVM, CartItem>()
@@ -145,13 +147,6 @@ namespace Ecom.BLL.Mapper
                         srcMember != null)); // skip null to avoid overwriting
 
             // DeletedVM is handled manually → no need for mapper
-
-
-
-
-
-
-            // ----------------------------------------
 
             // ----------------------------------------
             // ## Brand Mappings
@@ -268,9 +263,32 @@ namespace Ecom.BLL.Mapper
 
             // ----------------------------------------
             // ## Payment Mappings
+            // ---------------------------------------
+            CreateMap<PaymentResultVM, Payment>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PaymentId));
+
+            CreateMap<Payment, GetPaymentVM>().ReverseMap();
             // ----------------------------------------
-            CreateMap<CreatePaymentVM, Payment>()
-                .ConstructUsing(vm => new Payment(vm.OrderId, vm.TotalAmount, vm.PaymentMethod, null, vm.CreatedBy!));
+
+
+            // ----------------------------------------
+            // ## FaceId Mappings
+            // ----------------------------------------
+            CreateMap<RegisterFaceIdVM, FaceId>()
+                    .ForMember(dest => dest.Encoding,
+                        opt => opt.MapFrom(src => FaceId.DoubleArrayToBytes(src.Encoding)))
+                    .ForMember(dest => dest.AppUserId,
+                        opt => opt.MapFrom(src => src.AppUserId))
+                    .ForMember(dest => dest.CreatedBy,
+                        opt => opt.MapFrom(src => src.CreatedBy));
+
+            CreateMap<UpdateFaceIdVM, FaceId>()
+                .ForMember(dest => dest.Encoding,
+                    opt => opt.MapFrom(src => FaceId.DoubleArrayToBytes(src.Encoding)))
+                .ForMember(dest => dest.AppUserId,
+                    opt => opt.MapFrom(src => src.AppUserId))
+                .ForMember(dest => dest.UpdatedBy,
+                    opt => opt.MapFrom(src => src.UpdatedBy));
             // ----------------------------------------
         }
     }

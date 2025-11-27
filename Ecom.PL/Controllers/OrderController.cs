@@ -54,12 +54,15 @@ namespace Ecom.PL.Controllers
         // CREATE ORDER (Creates order From Cart of userId)
         // ==========================
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromQuery] string userId, [FromQuery] string shippingAddress)
+        public async Task<IActionResult> Create([FromQuery] string shippingAddress)
         {
+            if (CurrentUserId == null)
+                return Unauthorized("User Not Logged in.");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await orderService.CreateOrderAsync(userId, shippingAddress);
+            var result = await orderService.CreateOrderAsync(CurrentUserId, shippingAddress);
 
             if (!result.IsSuccess)
                 return BadRequest(result);
@@ -70,9 +73,12 @@ namespace Ecom.PL.Controllers
         // DELETE ORDER (Soft Delete)
         // ==========================
         [HttpDelete("{id}")]
-        public async Task<IActionResult> ToggleDelete(int id, [FromQuery] string userId)
+        public async Task<IActionResult> ToggleDelete(int id)
         {
-            var result = await orderService.DeleteAsync(id, userId);
+            if (CurrentUserId == null)
+                return Unauthorized("User Not Logged in.");
+
+            var result = await orderService.DeleteAsync(id, CurrentUserId);
 
             if (!result.IsSuccess)
                 return NotFound(result);
@@ -92,9 +98,11 @@ namespace Ecom.PL.Controllers
         }
 
         [HttpPut("{id}/cancel")]
-        public async Task<IActionResult> CancelOrder(int id, [FromQuery] string user)
+        public async Task<IActionResult> CancelOrder(int id)
         {
-            var result = await orderService.CancelOrderAsync(id,user);
+            if (CurrentUserId == null)
+                return Unauthorized("User Not Logged in.");
+            var result = await orderService.CancelOrderAsync(id,CurrentUserId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

@@ -48,7 +48,10 @@ namespace Ecom.DAL.Common
             services.AddScoped<ICartItemRepo, CartItemRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
             services.AddScoped<IPaymentRepo, PaymentRepo>();
-            
+
+            // Face ID Repositories
+            services.AddScoped<IFaceIdRepo, FaceIdRepo>();
+
             return services;
         }
     }
