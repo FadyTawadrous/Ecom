@@ -16,20 +16,5 @@ namespace Ecom.DAL.Repo.Abstraction
         Task<int> SaveChangesAsync();
 
 
-        // for next Iterations
-        /*Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status);
-
-        // Search & filtering (optional)
-        Task<IEnumerable<Order>> FilterAsync(
-            OrderStatus? status = null,
-            DateTime? fromDate = null,
-            DateTime? toDate = null,
-            bool includeDeleted = false
-        );
-
-
-        // Includes (navigation loading)
-        Task<Order?> GetDetailedAsync(int id);  
-        // (Items + User + Payment)*/
     }
 }
