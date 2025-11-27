@@ -22,12 +22,4 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Ecom.BLL\Ecom.BLL.csproj" />
 	</ItemGroup>
-
-
-
-
-
-		<ItemGroup>
-			<Folder Include="Files\Images\ProductThumbnail\" />
-		</ItemGroup>
 </Project>

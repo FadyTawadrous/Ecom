@@ -1,4 +1,4 @@
-using Ecom.BLL.ModelVM.Cart;
+﻿using Ecom.BLL.ModelVM.Cart;
 using Ecom.BLL.ModelVM.CartItem;
 using Ecom.BLL.ModelVM.Category;
 using Ecom.DAL.Entity;
@@ -86,21 +86,71 @@ namespace Ecom.BLL.Mapper
             CreateMap<Product, DeleteProductVM>().ReverseMap();
 
             // FIX duplicate CreateProductVM mapping (kept only one)
-            CreateMap<UpdateProductVM, Product>()
-                .ForMember(dest => dest.ThumbnailUrl, opt => opt.Ignore())
-                .ForMember(dest => dest.ProductReviews, opt => opt.Ignore())
-                .ForMember(dest => dest.ProductImageUrls, opt => opt.Ignore())
-                .ForMember(dest => dest.Rating, opt => opt.Ignore())
-                .ForMember(dest => dest.QuantitySold, opt => opt.Ignore())
-                .ReverseMap();
+            CreateMap<UpdateProductVM, Product>().ReverseMap();
 
             CreateMap<Product, GetProductVM>()
                 .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => src.ThumbnailUrl))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.ProductReviews))
                 .ReverseMap();
 
             CreateMap<Product, AddQuantitySoldVM>().ReverseMap();
+
+            // ---------------------------------------------------------
+            // 1) ProductReviewCreateVM → ProductReview (using constructor)
+            // ---------------------------------------------------------
+            CreateMap<ProductReviewCreateVM, ProductReview>()
+                .ConstructUsing(src =>
+                    new ProductReview(
+                        src.Title,
+                        src.Description,
+                        src.Rating,
+                        src.CreatedBy ?? "system",
+                        src.ProductId,
+                        src.AppUserId
+                    )
+                );
+
+            // ---------------------------------------------------------
+            // 2) ProductReview → ProductReviewGetVM
+            // ---------------------------------------------------------
+            CreateMap<ProductReview, ProductReviewGetVM>()
+                .ForMember(dest => dest.ProductTitle,
+                    opt => opt.MapFrom(src => src.Product.Title))
+
+                .ForMember(dest => dest.AppUserDisplayName,
+                    opt => opt.MapFrom(src => src.AppUser.DisplayName))  // adjust field if different
+
+                // copy all basic fields normally
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating))
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
+                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => src.CreatedOn))
+                .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
+                .ForMember(dest => dest.UpdatedOn, opt => opt.MapFrom(src => src.UpdatedOn))
+                .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
+                .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(src => src.AppUserId));
+
+            // ---------------------------------------------------------
+            // 3) ProductReviewUpdateVM → ProductReview
+            // (used for mapping into existing tracked entity)
+            // ---------------------------------------------------------
+            CreateMap<ProductReviewUpdateVM, ProductReview>()
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, srcMember) =>
+                        srcMember != null)); // skip null to avoid overwriting
+
+            // DeletedVM is handled manually → no need for mapper
+
+
+
+
+
+
             // ----------------------------------------
 
             // ----------------------------------------

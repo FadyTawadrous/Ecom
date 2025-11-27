@@ -1,6 +1,7 @@
 ﻿using Ecom.BLL.ModelVM.ProductReview;
 using Ecom.BLL.Responses;
 using Ecom.BLL.Service.Abstraction;
+using Ecom.DAL.Repo.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,24 +19,24 @@ namespace Ecom.BLL.Service.Implementation
         public class ProductReviewService : IProductReviewService
         {
             private readonly IProductReviewRepo _reviewRepo;
-            private readonly IProductRepo _productRepo;
+            
             private readonly IMapper _mapper;
             private readonly IRatingCalculatorService _ratingCalculatorService;
-            private readonly IProductService _productService;
+            private readonly IProductRepo _productRepo;
 
             public ProductReviewService(
             IProductReviewRepo reviewRepo,
-            IProductRepo productRepo,
+           
             IMapper mapper,
             IRatingCalculatorService ratingCalculatorService,
-            IProductService productService
+            IProductRepo productRepo
             )
         {
             _reviewRepo = reviewRepo;
-            _productRepo = productRepo;
+           
             _mapper = mapper;
             _ratingCalculatorService = ratingCalculatorService;
-            _productService = productService;
+            _productRepo = productRepo;
         }
 
         // ----------------------------
@@ -150,7 +151,7 @@ namespace Ecom.BLL.Service.Implementation
             // ----------------------------
             // 6) Create review and update product rating
             // ----------------------------
-            public async Task<ResponseResult<bool>> CreateAsync(ProductReviewCreateVM model)
+            public async Task<ResponseResult<bool>> CreateAsync(string userId, ProductReviewCreateVM model)
             {
                 try
                 {
@@ -166,7 +167,7 @@ namespace Ecom.BLL.Service.Implementation
                 decimal avgRating = await _ratingCalculatorService.CalculateAverageRatingAsync(entity.ProductId);
 
                 // STEP 2: Update product rating
-                await _productService.UpdateRatingAsync(entity.ProductId, avgRating);
+                await _productRepo.UpdateRatingAsync(entity.ProductId, avgRating);
 
                 return new ResponseResult<bool>(true, null, true);
                 }
@@ -179,7 +180,7 @@ namespace Ecom.BLL.Service.Implementation
             // ----------------------------
             // 7) Update review and update product rating
             // ----------------------------
-            public async Task<ResponseResult<bool>> UpdateAsync(ProductReviewUpdateVM model)
+            public async Task<ResponseResult<bool>> UpdateAsync(string userId, ProductReviewUpdateVM model)
             {
                 try
                 {
@@ -198,7 +199,7 @@ namespace Ecom.BLL.Service.Implementation
                 decimal avgRating = await _ratingCalculatorService.CalculateAverageRatingAsync(existing.ProductId);
 
                 // 🔹 STEP 2: Update product rating
-                await _productService.UpdateRatingAsync(existing.ProductId, avgRating);
+                await _productRepo.UpdateRatingAsync(existing.ProductId, avgRating);
 
                 return new ResponseResult<bool>(true, null, true);
                 }
@@ -226,7 +227,7 @@ namespace Ecom.BLL.Service.Implementation
                 decimal avgRating = await _ratingCalculatorService.CalculateAverageRatingAsync(existing.ProductId);
 
                 // 🔹 STEP 2: Update product rating
-                await _productService.UpdateRatingAsync(existing.ProductId, avgRating);
+                await _productRepo.UpdateRatingAsync(existing.ProductId, avgRating);
 
                 return new ResponseResult<bool>(true, null, true);
                 }
