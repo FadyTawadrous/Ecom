@@ -270,7 +270,6 @@ namespace Ecom.BLL.Mapper
             CreateMap<Payment, GetPaymentVM>().ReverseMap();
             // ----------------------------------------
 
-
             // ----------------------------------------
             // ## FaceId Mappings
             // ----------------------------------------
