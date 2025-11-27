@@ -10,7 +10,7 @@ namespace Ecom.BLL.Service.Implementation
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
 
-        public PaymentService(IPaymentRepo paymentRepo, IMapper mapper, OrderService orderService, ProductService productService)
+        public PaymentService(IPaymentRepo paymentRepo, IMapper mapper, IOrderService orderService, IProductService productService)
         {
             _paymentRepo = paymentRepo;
             _mapper = mapper;
