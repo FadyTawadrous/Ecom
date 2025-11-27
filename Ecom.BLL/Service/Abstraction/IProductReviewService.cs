@@ -16,8 +16,8 @@ namespace Ecom.BLL.Service.Abstraction
 
         Task<ResponseResult<IEnumerable<ProductReviewGetVM>>> GetByBrandIdAsync(int brandId);
         Task<ResponseResult<IEnumerable<ProductReviewGetVM>>> GetByUserIdAsync(string userId);
-        Task<ResponseResult<bool>> CreateAsync(ProductReviewCreateVM vm);
-        Task<ResponseResult<bool>> UpdateAsync(ProductReviewUpdateVM vm);
+        Task<ResponseResult<bool>> CreateAsync(string userId, ProductReviewCreateVM vm);
+        Task<ResponseResult<bool>> UpdateAsync(string userId, ProductReviewUpdateVM vm);
         Task<ResponseResult<bool>> ToggleDeleteAsync(int id, string userModified);
     }
 }

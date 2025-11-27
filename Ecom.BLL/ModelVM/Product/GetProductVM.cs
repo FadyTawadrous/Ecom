@@ -1,5 +1,8 @@
 ﻿
 
+using Ecom.BLL.ModelVM.ProductReview;
+using Ecom.DAL.Entity;
+
 namespace Ecom.BLL.ModelVM.Product
 {
     public class GetProductVM
@@ -18,6 +21,9 @@ namespace Ecom.BLL.ModelVM.Product
         public int CategoryId { get; set; }
         public string? CategoryName { get; set; }
         public bool IsDeleted { get; set; }
+
+        public IEnumerable<ProductReviewGetVM> ?Reviews { get; set; }
+        public IEnumerable<GetProductImageUrlVM>? ProductImageUrls { get; set; }
     }
 
 }

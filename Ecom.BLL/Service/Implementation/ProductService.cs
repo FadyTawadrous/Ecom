@@ -1,4 +1,5 @@
 ﻿using Ecom.BLL.ModelVM.Product;
+using Ecom.BLL.ModelVM.ProductReview;
 using Ecom.DAL.Database;
 using Ecom.DAL.Entity;
 using Microsoft.Extensions.Hosting;
@@ -14,11 +15,13 @@ namespace Ecom.BLL.Service.Implementation
     {
         private readonly IProductRepo _productRepo;
         private readonly IMapper _mapper;
+        private readonly IProductReviewService _productReviewService;
 
-        public ProductService(IProductRepo productRepo, IMapper mapper)
+        public ProductService(IProductRepo productRepo, IMapper mapper, IProductReviewService productReviewService)
         {
             _productRepo = productRepo;
             _mapper = mapper;
+            _productReviewService = productReviewService;
         }
 
 
@@ -112,6 +115,16 @@ namespace Ecom.BLL.Service.Implementation
                     return new ResponseResult<GetProductVM>(null, "Product not found", false);
 
                 var mapped = _mapper.Map<GetProductVM>(product);
+                var reviewResponse = await _productReviewService.GetByProductIdAsync(id);
+
+                if (reviewResponse.IsSuccess)
+                {
+                    mapped.Reviews = reviewResponse.Result;
+                }
+                else
+                {
+                    mapped.Reviews = new List<ProductReviewGetVM>(); // or null, your choice
+                }
                 return new ResponseResult<GetProductVM>(mapped, null, true);
             }
             catch (Exception ex)
@@ -128,12 +141,12 @@ namespace Ecom.BLL.Service.Implementation
             {
                 // 1. Validate product (e.g., product title unique) - optional
                 // 2. Handle thumbnail upload
-                string thumbnailUrl = model.ThumbnailUrl ?? "default.png";
+                string thumbnailUrl =  "default.png";
                 if (model.Thumbnail != null)
                 {
                     try
                     {
-                        thumbnailUrl = await Upload.UploadFileAsync("File/ProductThumbnail", model.Thumbnail);
+                        thumbnailUrl = await Upload.UploadFileAsync("Images/ProductThumbnail", model.Thumbnail);
                     }
                     catch (Exception ex)
                     {
@@ -145,14 +158,14 @@ namespace Ecom.BLL.Service.Implementation
 
                 // 3. Map VM -> Entity (use ConstructUsing in AutoMapper profile)
                 var entity = _mapper.Map<Product>(model);
-
+                
                 // 4. Persist
                 var result = await _productRepo.AddAsync(entity);
                 if (!result)
                 {
                     // cleanup uploaded file on failure
                     if (!string.IsNullOrEmpty(thumbnailUrl) && thumbnailUrl != "default.png")
-                        await Upload.RemoveFileAsync("File/ProductThumbnail", thumbnailUrl);
+                        await Upload.RemoveFileAsync("Images/ProductThumbnail", thumbnailUrl);
 
                     return new ResponseResult<bool>(false, "Failed to save product.", false);
                 }
@@ -180,10 +193,10 @@ namespace Ecom.BLL.Service.Implementation
                 {
                     try
                     {
-                        newThumb = await Upload.UploadFileAsync("File/ProductThumbnail", model.Thumbnail);
+                        newThumb = await Upload.UploadFileAsync("Images/ProductThumbnail", model.Thumbnail);
                         if (!string.IsNullOrEmpty(existing.ThumbnailUrl) && existing.ThumbnailUrl != "default.png")
                         {
-                            await Upload.RemoveFileAsync("File/ProductThumbnail", existing.ThumbnailUrl);
+                            await Upload.RemoveFileAsync("Images/ProductThumbnail", existing.ThumbnailUrl);
                         }
                     }
                     catch (Exception ex)
@@ -193,9 +206,9 @@ namespace Ecom.BLL.Service.Implementation
                 }
 
                 model.ThumbnailUrl = newThumb;
-                var entity = _mapper.Map<Product>(model);
+                _mapper.Map(model, existing);
 
-                var result = await _productRepo.UpdateAsync(entity);
+                var result = await _productRepo.UpdateAsync(existing);
                 return new ResponseResult<bool>(result, result ? null : "Failed to update product.", result);
             }
             catch (Exception ex)
@@ -221,7 +234,7 @@ namespace Ecom.BLL.Service.Implementation
                 // optionally remove thumbnail
                 if (!string.IsNullOrEmpty(product.ThumbnailUrl) && product.ThumbnailUrl != "default.png")
                 {
-                    await Upload.RemoveFileAsync("File/ProductThumbnail", product.ThumbnailUrl);
+                    await Upload.RemoveFileAsync("Images/ProductThumbnail", product.ThumbnailUrl);
                 }
 
                 return new ResponseResult<bool>(true, null, true);
