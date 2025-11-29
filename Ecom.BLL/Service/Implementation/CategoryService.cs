@@ -32,7 +32,7 @@ namespace Ecom.BLL.Service.Implementation
                 // Else set to default image
                 if (model.Image != null)
                 {
-                    model.ImageUrl = await Upload.UploadFileAsync("File/CategoryImages", model.Image);
+                    model.ImageUrl = await Upload.UploadFileAsync("Images/CategoryImages", model.Image);
                 }
                 else if (string.IsNullOrWhiteSpace(model.ImageUrl))
                 {

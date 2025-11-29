@@ -1,10 +1,12 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace Ecom.BLL.ModelVM.Account
 {
     public class UpdateUserVM
     {
-        [Required]
-        public string Id { get; set; } = null!;
+        //[JsonIgnore]
+        //public string Id { get; set; } = null!;
 
         [StringLength(100, MinimumLength = 2)]
         public string? DisplayName { get; set; }

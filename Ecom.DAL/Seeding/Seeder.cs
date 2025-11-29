@@ -38,6 +38,7 @@ namespace Ecom.DAL.Seeding
                 var admin = new AppUser("admin@ecom.com", "System Admin", null, "System", null) { EmailConfirmed = true };
                 await userManager.CreateAsync(admin, "Admin@123");
                 await userManager.AddToRoleAsync(admin, "Admin");
+                await userManager.AddToRoleAsync(admin, "Customer");
             }
         }
 

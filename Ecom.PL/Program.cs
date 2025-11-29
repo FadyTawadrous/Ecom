@@ -2,6 +2,7 @@
 using Ecom.DAL.Entity;
 using Ecom.DAL.Seeding;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 
 namespace Ecom.PL
 {
@@ -81,6 +82,14 @@ namespace Ecom.PL
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // This tells .NET: "If a request comes in starting with /Files, 
+            // look inside the physical 'Files' folder in the project root."
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "Files")),
+                RequestPath = "/Files"
+            });
 
             app.MapControllers();
 

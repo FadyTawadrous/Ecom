@@ -41,7 +41,7 @@ namespace Ecom.BLL.Service.Implementation
                 }
 
                 //2- Handle file upload
-                string? uploadedImageUrl = "default.png";
+                string? uploadedImageUrl = null;
                 if (registerVM.ProfileImage != null)
                 {
                     try
