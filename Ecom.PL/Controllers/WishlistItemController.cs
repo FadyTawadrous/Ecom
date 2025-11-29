@@ -40,11 +40,25 @@ namespace Ecom.PL.Controllers
             return NotFound(result.ErrorMessage); // 404            
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("Users/{userId}/WishlistItems")]
-        public async Task<IActionResult> GetAllByUserId([FromRoute] string userId, [FromQuery] string? name = null,
+        public async Task<IActionResult> GetAllByUserId([FromRoute] string userId, [FromQuery] string? itemName = null,
             [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _wishlistItemService.GetAllByUserIdAsync(userId, name, pageNum, pageSize);
+            var result = await _wishlistItemService.GetAllByUserIdAsync(userId, itemName, pageNum, pageSize);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Result); // 200 with data                
+            }
+            return NotFound(result.ErrorMessage); // 404
+        }
+
+        [HttpGet("Users/me/WishlistItems")]
+        public async Task<IActionResult> GetAllForCurrentUser([FromQuery] string? itemName = null,
+            [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _wishlistItemService.GetAllByUserIdAsync(CurrentUserId, itemName, pageNum, pageSize);
 
             if (result.IsSuccess)
             {
