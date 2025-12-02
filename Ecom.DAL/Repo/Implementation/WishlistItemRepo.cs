@@ -1,4 +1,6 @@
 ﻿
+using Ecom.BLL.Responses;
+
 namespace Ecom.DAL.Repo.Implementation
 {
     public class WishlistItemRepo : IWishlistItemRepo
@@ -29,7 +31,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<(IEnumerable<WishlistItem> Items, int TotalCount)> GetAllByUserIdAsync(string userId,
+        public async Task<PaginatedResult<WishlistItem>> GetAllByUserIdAsync(string userId,
             Expression<Func<WishlistItem, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<WishlistItem, object>>[] includes)
@@ -60,7 +62,13 @@ namespace Ecom.DAL.Repo.Implementation
                     .Take(pageSize);
 
                 var items = await query.ToListAsync();
-                return (items, totalCount);
+                var result = new PaginatedResult<WishlistItem>(
+                    items,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+                return result;
             }
             catch (Exception)
             {
@@ -68,7 +76,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<(IEnumerable<WishlistItem> Items, int TotalCount)> GetAllAsync(
+        public async Task<PaginatedResult<WishlistItem>> GetAllAsync(
             Expression<Func<WishlistItem, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<WishlistItem, object>>[] includes)
@@ -99,7 +107,13 @@ namespace Ecom.DAL.Repo.Implementation
                     .Take(pageSize);
 
                 var items = await query.ToListAsync();
-                return (items, totalCount);
+                var result = new PaginatedResult<WishlistItem>(
+                    items,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+                return result;
             }
             catch (Exception)
             {
@@ -116,6 +130,13 @@ namespace Ecom.DAL.Repo.Implementation
                 {
                     return false;
                 }
+
+                // Check if the same product is already in the user's wishlist
+                bool exists = await _db.WishlistItems
+                    .AnyAsync(w => w.AppUserId == newItem.AppUserId && w.ProductId == newItem.ProductId);
+
+                if (exists)
+                    return true; // already exists, still return true
 
                 var result = await _db.WishlistItems.AddAsync(newItem);
 

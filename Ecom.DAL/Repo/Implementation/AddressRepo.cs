@@ -1,4 +1,6 @@
 ﻿
+using Ecom.BLL.Responses;
+
 namespace Ecom.DAL.Repo.Implementation
 {
     public class AddressRepo : IAddressRepo
@@ -29,7 +31,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<(IEnumerable<Address> Items, int TotalCount)> GetAllByUserIdAsync(string userId,
+        public async Task<PaginatedResult<Address>> GetAllByUserIdAsync(string userId,
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes)
@@ -60,7 +62,13 @@ namespace Ecom.DAL.Repo.Implementation
                     .Take(pageSize);
 
                 var items = await query.ToListAsync();
-                return (items, totalCount);
+                var result = new PaginatedResult<Address>(
+                    items,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+                return result;
             }
             catch (Exception)
             {
@@ -68,7 +76,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<(IEnumerable<Address> Items, int TotalCount)> GetAllAsync(
+        public async Task<PaginatedResult<Address>> GetAllAsync(
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes)
@@ -99,7 +107,13 @@ namespace Ecom.DAL.Repo.Implementation
                     .Take(pageSize);
 
                 var items = await query.ToListAsync();
-                return (items, totalCount);
+                var result = new PaginatedResult<Address>(
+                    items,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+                return result;
             }
             catch (Exception)
             {

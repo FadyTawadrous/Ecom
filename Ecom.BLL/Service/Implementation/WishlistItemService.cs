@@ -43,20 +43,20 @@ namespace Ecom.BLL.Service.Implementation
                      string.IsNullOrEmpty(searchName) ||
                      w.Product.Title.ToLower().Contains(searchName.ToLower());
 
-                var (items, totalCount) = await _wishlistItemRepo.GetAllAsync(
+                var result = await _wishlistItemRepo.GetAllAsync(
                     filter: filter,
                     pageSize: pageSize,
                     pageNumber: pageNumber,
                     includes: [w => w.AppUser, w => w.Product]);
 
-                if (items == null)
+                if (result.Items == null)
                     return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(null,
                         "No wishlist items found.", false);
 
-                var mappedItems = _mapper.Map<IEnumerable<GetWishlistItemVM>>(items);
+                var mappedItems = _mapper.Map<IEnumerable<GetWishlistItemVM>>(result.Items);
                 var paginatedResult = new PaginatedResult<GetWishlistItemVM>(
                     mappedItems,
-                    totalCount,
+                    result.TotalCount,
                     pageNumber,
                     pageSize
                 );
@@ -79,21 +79,21 @@ namespace Ecom.BLL.Service.Implementation
                      string.IsNullOrEmpty(searchName) ||
                      w.Product.Title.ToLower().Contains(searchName.ToLower());
 
-                var (items, totalCount) = await _wishlistItemRepo.GetAllByUserIdAsync(
+                var result = await _wishlistItemRepo.GetAllByUserIdAsync(
                     userId: userId,
                     filter: filter,
                     pageSize: pageSize,
                     pageNumber: pageNumber,
                     includes: w => w.Product);
 
-                if (items == null)
+                if (result.Items == null)
                     return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(null, 
                         "No wishlist items found.", false);
 
-                var mappedItems = _mapper.Map<IEnumerable<GetWishlistItemVM>>(items);
+                var mappedItems = _mapper.Map<IEnumerable<GetWishlistItemVM>>(result.Items);
                 var paginatedResult = new PaginatedResult<GetWishlistItemVM>(
                     mappedItems,
-                    totalCount,
+                    result.TotalCount,
                     pageNumber,
                     pageSize
                 );

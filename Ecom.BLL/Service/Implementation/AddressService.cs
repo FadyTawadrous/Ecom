@@ -36,20 +36,20 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                var (addresses, totalCount) = await _addressRepo.GetAllAsync(
+                var result = await _addressRepo.GetAllAsync(
                     filter: a => !a.IsDeleted,
                     pageSize: pageSize,
                     pageNumber: pageNumber,
                     includes: a => a.AppUser);
 
-                if (addresses == null)
+                if (result.Items == null)
                     return new ResponseResult<PaginatedResult<GetAddressVM>>(null,
                         "No addresses found.", false);
 
-                var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(addresses);
+                var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(result.Items);
                 var paginatedResult = new PaginatedResult<GetAddressVM>(
                     mappedAddresses,
-                    totalCount,
+                    result.TotalCount,
                     pageNumber,
                     pageSize);
 
@@ -66,20 +66,20 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
-                var (addresses, totalCount) = await _addressRepo.GetAllByUserIdAsync(
+                var result = await _addressRepo.GetAllByUserIdAsync(
                     userId: userId,
                     filter: a => !a.IsDeleted,
                     pageSize: pageSize,
                     pageNumber: pageNumber);
 
-                if (addresses == null)
+                if (result.Items == null)
                     return new ResponseResult<PaginatedResult<GetAddressVM>>(null,
                         "No addresses found.", false);
 
-                var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(addresses);
+                var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(result.Items);
                 var paginatedResult = new PaginatedResult<GetAddressVM>(
                     mappedAddresses,
-                    totalCount,
+                    result.TotalCount,
                     pageNumber,
                     pageSize);
 
