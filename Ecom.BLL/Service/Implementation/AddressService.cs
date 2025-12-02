@@ -42,7 +42,7 @@ namespace Ecom.BLL.Service.Implementation
                     pageNumber: pageNumber,
                     includes: a => a.AppUser);
 
-                if (addresses == null || !addresses.Any())
+                if (addresses == null)
                     return new ResponseResult<IEnumerable<GetAddressVM>>(null,
                         "No addresses found.", false);
 
@@ -66,7 +66,7 @@ namespace Ecom.BLL.Service.Implementation
                     pageSize: pageSize,
                     pageNumber: pageNumber);
 
-                if (addresses == null || !addresses.Any())
+                if (addresses == null)
                     return new ResponseResult<IEnumerable<GetAddressVM>>(null,
                         "No addresses found.", false);
 

@@ -5,9 +5,9 @@ namespace Ecom.BLL.Service.Abstraction
     {
         // Get
         Task<ResponseResult<GetWishlistItemVM>> GetByIdAsync(int id);
-        Task<ResponseResult<IEnumerable<GetWishlistItemVM>>> GetAllAsync(string? searchName = null, 
+        Task<ResponseResult<PaginatedResult<GetWishlistItemVM>>> GetAllAsync(string? searchName = null, 
             int pageNumber = 1, int pageSize = 10);
-        Task<ResponseResult<IEnumerable<GetWishlistItemVM>>> GetAllByUserIdAsync(string userId,
+        Task<ResponseResult<PaginatedResult<GetWishlistItemVM>>> GetAllByUserIdAsync(string userId,
             string? searchName = null, int pageNumber = 1, int pageSize = 10);
 
         // Create

@@ -33,7 +33,7 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        public async Task<ResponseResult<IEnumerable<GetWishlistItemVM>>> GetAllAsync(
+        public async Task<ResponseResult<PaginatedResult<GetWishlistItemVM>>> GetAllAsync(
             string? searchName = null, int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -43,26 +43,33 @@ namespace Ecom.BLL.Service.Implementation
                      string.IsNullOrEmpty(searchName) ||
                      w.Product.Title.ToLower().Contains(searchName.ToLower());
 
-                var items = await _wishlistItemRepo.GetAllAsync(
+                var (items, totalCount) = await _wishlistItemRepo.GetAllAsync(
                     filter: filter,
                     pageSize: pageSize,
                     pageNumber: pageNumber,
                     includes: [w => w.AppUser, w => w.Product]);
 
-                if (items == null || !items.Any())
-                    return new ResponseResult<IEnumerable<GetWishlistItemVM>>(null,
+                if (items == null)
+                    return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(null,
                         "No wishlist items found.", false);
 
                 var mappedItems = _mapper.Map<IEnumerable<GetWishlistItemVM>>(items);
-                return new ResponseResult<IEnumerable<GetWishlistItemVM>>(mappedItems, null, true);
+                var paginatedResult = new PaginatedResult<GetWishlistItemVM>(
+                    mappedItems,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+
+                return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(paginatedResult, null, true);
             }
             catch (Exception ex)
             {
-                return new ResponseResult<IEnumerable<GetWishlistItemVM>>(null, ex.Message, false);
+                return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(null, ex.Message, false);
             }
         }
 
-        public async Task<ResponseResult<IEnumerable<GetWishlistItemVM>>> GetAllByUserIdAsync(string userId,
+        public async Task<ResponseResult<PaginatedResult<GetWishlistItemVM>>> GetAllByUserIdAsync(string userId,
             string? searchName = null, int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -72,23 +79,30 @@ namespace Ecom.BLL.Service.Implementation
                      string.IsNullOrEmpty(searchName) ||
                      w.Product.Title.ToLower().Contains(searchName.ToLower());
 
-                var items = await _wishlistItemRepo.GetAllByUserIdAsync(
+                var (items, totalCount) = await _wishlistItemRepo.GetAllByUserIdAsync(
                     userId: userId,
                     filter: filter,
                     pageSize: pageSize,
                     pageNumber: pageNumber,
                     includes: w => w.Product);
 
-                if (items == null || !items.Any())
-                    return new ResponseResult<IEnumerable<GetWishlistItemVM>>(null, 
+                if (items == null)
+                    return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(null, 
                         "No wishlist items found.", false);
 
                 var mappedItems = _mapper.Map<IEnumerable<GetWishlistItemVM>>(items);
-                return new ResponseResult<IEnumerable<GetWishlistItemVM>>(mappedItems, null, true);
+                var paginatedResult = new PaginatedResult<GetWishlistItemVM>(
+                    mappedItems,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+
+                return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(paginatedResult, null, true);
             }
             catch (Exception ex)
             {
-                return new ResponseResult<IEnumerable<GetWishlistItemVM>>(null, ex.Message, false);
+                return new ResponseResult<PaginatedResult<GetWishlistItemVM>>(null, ex.Message, false);
             }
         }
 

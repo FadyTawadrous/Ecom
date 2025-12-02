@@ -29,7 +29,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<IEnumerable<WishlistItem>> GetAllByUserIdAsync(string userId,
+        public async Task<(IEnumerable<WishlistItem> Items, int TotalCount)> GetAllByUserIdAsync(string userId,
             Expression<Func<WishlistItem, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<WishlistItem, object>>[] includes)
@@ -47,6 +47,9 @@ namespace Ecom.DAL.Repo.Implementation
                 // Optional eager loading
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
+                
+                // Count before pagination
+                int totalCount = await query.CountAsync();
 
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
@@ -56,7 +59,8 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                return await query.ToListAsync();
+                var items = await query.ToListAsync();
+                return (items, totalCount);
             }
             catch (Exception)
             {
@@ -64,7 +68,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<IEnumerable<WishlistItem>> GetAllAsync(
+        public async Task<(IEnumerable<WishlistItem> Items, int TotalCount)> GetAllAsync(
             Expression<Func<WishlistItem, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<WishlistItem, object>>[] includes)
@@ -83,6 +87,9 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
+                // Count before pagination
+                int totalCount = await query.CountAsync();
+
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
@@ -91,7 +98,8 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                return await query.ToListAsync();
+                var items = await query.ToListAsync();
+                return (items, totalCount);
             }
             catch (Exception)
             {
