@@ -1,4 +1,6 @@
 ﻿
+using Ecom.BLL.Responses;
+
 namespace Ecom.DAL.Repo.Implementation
 {
     public class WishlistItemRepo : IWishlistItemRepo
@@ -29,7 +31,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<IEnumerable<WishlistItem>> GetAllByUserIdAsync(string userId,
+        public async Task<PaginatedResult<WishlistItem>> GetAllByUserIdAsync(string userId,
             Expression<Func<WishlistItem, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<WishlistItem, object>>[] includes)
@@ -47,6 +49,9 @@ namespace Ecom.DAL.Repo.Implementation
                 // Optional eager loading
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
+                
+                // Count before pagination
+                int totalCount = await query.CountAsync();
 
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
@@ -56,7 +61,14 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                return await query.ToListAsync();
+                var items = await query.ToListAsync();
+                var result = new PaginatedResult<WishlistItem>(
+                    items,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+                return result;
             }
             catch (Exception)
             {
@@ -64,7 +76,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<IEnumerable<WishlistItem>> GetAllAsync(
+        public async Task<PaginatedResult<WishlistItem>> GetAllAsync(
             Expression<Func<WishlistItem, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<WishlistItem, object>>[] includes)
@@ -83,6 +95,9 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
+                // Count before pagination
+                int totalCount = await query.CountAsync();
+
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
@@ -91,7 +106,14 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                return await query.ToListAsync();
+                var items = await query.ToListAsync();
+                var result = new PaginatedResult<WishlistItem>(
+                    items,
+                    totalCount,
+                    pageNumber,
+                    pageSize
+                );
+                return result;
             }
             catch (Exception)
             {
@@ -108,6 +130,13 @@ namespace Ecom.DAL.Repo.Implementation
                 {
                     return false;
                 }
+
+                // Check if the same product is already in the user's wishlist
+                bool exists = await _db.WishlistItems
+                    .AnyAsync(w => w.AppUserId == newItem.AppUserId && w.ProductId == newItem.ProductId);
+
+                if (exists)
+                    return true; // already exists, still return true
 
                 var result = await _db.WishlistItems.AddAsync(newItem);
 

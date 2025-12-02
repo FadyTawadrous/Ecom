@@ -46,6 +46,10 @@ namespace Ecom.BLL.Common
 
                 // Save tokens the authentication cookie
                 options.SaveTokens = true;
+
+                // Configure correlation cookie for cross-scheme scenarios
+                options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.CorrelationCookie.SameSite = SameSiteMode.Lax;
             })
             .AddFacebook(options =>
             {
@@ -60,6 +64,20 @@ namespace Ecom.BLL.Common
                 options.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"]!;
                 options.SignInScheme = IdentityConstants.ExternalScheme;
                 options.SaveTokens = true;
+            });
+
+            // Configure Identity cookie options for development
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Allow HTTP in dev
+            });
+
+            // Configure external authentication cookie
+            services.ConfigureExternalCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Allow HTTP in dev
             });
 
             // Face Recognition Service
