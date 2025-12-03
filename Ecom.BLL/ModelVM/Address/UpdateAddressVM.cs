@@ -9,5 +9,7 @@ namespace Ecom.BLL.ModelVM.Address
         public string Country { get; set; } = null!;
         public string? PostalCode { get; set; }
         public string? UpdatedBy { get; set; } = null!;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

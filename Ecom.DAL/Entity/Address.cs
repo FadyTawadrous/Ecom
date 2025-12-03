@@ -7,6 +7,10 @@
         public string City { get; private set; } = null!;
         public string Country { get; private set; } = null!;
         public string? PostalCode { get; private set; }
+
+        public double? Latitude { get; private set; }
+        public double? Longitude { get; private set; }
+
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }        
         public string? UpdatedBy { get; private set; }
@@ -25,7 +29,7 @@
         // Logic
         public Address() { }
         public Address(string street, string city, string country, string postalCode, string createdBy,
-            string appUserId)
+            string appUserId, double latitude, double longitude)
         {
             Street = street;
             City = city;
@@ -35,9 +39,12 @@
             CreatedOn = DateTime.UtcNow;
             IsDeleted = false;
             AppUserId = appUserId;
+            Latitude = latitude;
+            Longitude = longitude;
         }
 
-        public bool Update(string street, string city, string country, string postalCode, string updatedBy)
+        public bool Update(string street, string city, string country, string postalCode, string updatedBy,
+            double latitude, double longitude)
         {
             if (!string.IsNullOrEmpty(updatedBy))
             {
@@ -47,6 +54,8 @@
                 PostalCode = postalCode;
                 UpdatedBy = updatedBy;
                 UpdatedOn = DateTime.UtcNow;
+                Latitude = latitude;
+                Longitude = longitude;
                 return true;
             }
             return false;

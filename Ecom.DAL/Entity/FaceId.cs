@@ -19,8 +19,9 @@ namespace Ecom.DAL.Entity
         public string? UpdatedBy { get; private set; }
 
         // Foreign key
-        public string AppUserId { get; private set; }
-        public virtual AppUser AppUser { get; private set; } 
+        [ForeignKey("AppUser")]
+        public string AppUserId { get; private set; } = null!;
+        public virtual AppUser AppUser { get; private set; } = null!;
 
         public FaceId() { }
         public FaceId(double[] encoding, string appUserId, string createdBy)

@@ -196,5 +196,24 @@ namespace Ecom.PL.Controllers
             return Redirect($"{returnUrl}?token={token}&user={userJson}");
         }
 
+        [HttpGet("confirm-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string code)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+            {
+                return BadRequest("Invalid parameters");
+            }
+
+            var result = await _accountService.ConfirmEmailAsync(userId, code);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new { message = "Email confirmed successfully! You can now login." });
+            }
+
+            return BadRequest(result.ErrorMessage);
+        }
+
     }
 }

@@ -1,6 +1,4 @@
 ﻿
-using Ecom.BLL.Responses;
-
 namespace Ecom.DAL.Repo.Abstraction
 {
     public interface IAddressRepo
@@ -8,11 +6,11 @@ namespace Ecom.DAL.Repo.Abstraction
         // Query Methods
         Task<Address?> GetByIdAsync(int id,
             params Expression<Func<Address, object>>[] includes);
-        Task<PaginatedResult<Address>> GetAllByUserIdAsync(string userId,
+        Task<IEnumerable<Address>> GetAllByUserIdAsync(string userId,
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes);
-        Task<PaginatedResult<Address>> GetAllAsync(
+        Task<IEnumerable<Address>> GetAllAsync(
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes);

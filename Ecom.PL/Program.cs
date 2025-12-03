@@ -1,6 +1,8 @@
 
+using Ecom.BLL.Service.Implementation;
 using Ecom.DAL.Entity;
 using Ecom.DAL.Seeding;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 
@@ -18,6 +20,9 @@ namespace Ecom.PL
             var connectionString = builder.Configuration.GetConnectionString("defaultConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+            builder.Services.AddHangfireServer();
 
             // In-Memory database for testing and development
             //builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -91,9 +96,16 @@ namespace Ecom.PL
                 RequestPath = "/Files"
             });
 
+
+            app.UseHangfireDashboard("/BackgroundJobs");
+            RecurringJob.AddOrUpdate<ICartReminderService>(
+                "abandoned-cart-email",
+                job => job.SendAbandonedCartEmailsAsync(),
+                Cron.Daily(12, 0));
+
             app.MapControllers();
 
-
+            //comment
             app.Run();
         }
     }

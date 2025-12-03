@@ -10,7 +10,7 @@ namespace Ecom.DAL.Configuration
             builder.HasOne(c => c.AppUser)
                 .WithOne(u => u.Cart)
                 .HasForeignKey<Cart>(c => c.AppUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(c => c.CartItems)
                 .WithOne(ci => ci.Cart)

@@ -39,7 +39,6 @@ namespace Ecom.PL.Controllers
             return NotFound(result.ErrorMessage); // 404            
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("Users/{userId}/Addresses")]
         public async Task<IActionResult> GetAllByUserId([FromRoute] string userId,
             [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
@@ -50,20 +49,7 @@ namespace Ecom.PL.Controllers
             {
                 return Ok(result.Result); // 200 with data                
             }
-            return NotFound(result.ErrorMessage); // 404
-        }
-
-        [HttpGet("Users/me/Addresses")]
-        public async Task<IActionResult> GetAllForCurrentUser([FromQuery] int pageNum = 1, 
-            [FromQuery] int pageSize = 10)
-        {
-            var result = await _addressService.GetAllByUserIdAsync(CurrentUserId, pageNum, pageSize);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result.Result); // 200 with data                
-            }
-            return NotFound(result.ErrorMessage); // 404
+            return BadRequest(result.ErrorMessage); // 404
         }
 
         // Create Operation

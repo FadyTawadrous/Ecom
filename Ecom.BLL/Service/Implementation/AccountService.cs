@@ -2,6 +2,7 @@
 using Ecom.BLL.ModelVM.Cart;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Ecom.BLL.Service.Implementation
 {
@@ -13,6 +14,7 @@ namespace Ecom.BLL.Service.Implementation
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly ICartService _cartService;
+        private readonly IEmailService _emailService;
 
         public AccountService(
             IAccountRepo accountRepo,
@@ -20,7 +22,8 @@ namespace Ecom.BLL.Service.Implementation
             SignInManager<AppUser> signInManager,
             IMapper mapper,
             ITokenService tokenService,
-            ICartService cartService)
+            ICartService cartService,
+            IEmailService emailService)
         {
             _accountRepo = accountRepo;
             _userManager = userManager;
@@ -28,6 +31,7 @@ namespace Ecom.BLL.Service.Implementation
             _mapper = mapper;
             _tokenService = tokenService;
             _cartService = cartService;
+            _emailService = emailService;
         }
 
         public async Task<ResponseResult<AuthResponseVM>> RegisterAsync(RegisterUserVM registerVM)
@@ -59,7 +63,7 @@ namespace Ecom.BLL.Service.Implementation
                 var user = _mapper.Map<AppUser>(registerVM);
 
                 //4 - Add the new user using UserManager
-                user.EmailConfirmed = true; // For demo purposes, set email as confirmed
+                //user.EmailConfirmed = true; // For demo purposes, set email as confirmed
 
                 var createResult = await _userManager.CreateAsync(user, registerVM.Password);
                 if (!createResult.Succeeded)
@@ -88,6 +92,19 @@ namespace Ecom.BLL.Service.Implementation
                     return new ResponseResult<AuthResponseVM>(null, "User created but failed to create cart: " + createCartResult.ErrorMessage, false);
                 }
 
+                // A. Generate the token
+                var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                // B. Encode it safely for URL
+                var encodedCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailConfirmationToken));
+                // C. Build the link pointing to your Angular Frontend
+                // Example: https://localhost:4200/auth/confirm-email?userId=...&code=...
+                var clientUrl = "http://localhost:4200";
+                var callbackUrl = $"{clientUrl}/account/confirm-email?userId={user.Id}&code={encodedCode}";
+
+                // D. Send Email
+                await _emailService.SendEmailAsync(user.Email!, "Confirm your email",
+                    $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>.");
+
                 //7- If successful, generate token, and return AuthResponseVM
                 var token = await _tokenService.CreateToken(user); // Generate JWT token
                 var userVM = _mapper.Map<GetUserVM>(user); // Map AppUser to GetUserVM
@@ -97,7 +114,7 @@ namespace Ecom.BLL.Service.Implementation
                     Token = token,
                     TokenExpiration = DateTime.UtcNow.AddDays(7)
                 };
-                return new ResponseResult<AuthResponseVM>(authResponse, null, true);
+                return new ResponseResult<AuthResponseVM>(null, null, true);
             }
             catch (Exception ex)
             {
@@ -105,10 +122,44 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
+        public async Task<ResponseResult<bool>> ConfirmEmailAsync(string userId, string code)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null || user.IsDeleted)
+                {
+                    return new ResponseResult<bool>(false, "User not found", false);
+                }
+
+                // Decode the token back
+                var decodedCode = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+
+                var result = await _userManager.ConfirmEmailAsync(user, decodedCode);
+
+                if (result.Succeeded)
+                {
+                    return new ResponseResult<bool>(true, null, true);
+                }
+
+                return new ResponseResult<bool>(false, "Invalid token", false);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<bool>(false, ex.Message, false);
+            }
+        }
+
         public async Task<ResponseResult<AuthResponseVM>> LoginAsync(LoginUserVM loginUserVM)
         {
             try
             {
+                //var x = await _userManager.FindByEmailAsync("fadytawadrous3@yahoo.com");
+                //var y = await  _userManager.FindByEmailAsync("fadyfofo3@yahoo.com");
+                //if (x != null)
+                //    await _userManager.DeleteAsync(x);
+                //if (y != null)
+                //    await _userManager.DeleteAsync(y);
                 //1- Check if user exists with email
                 var user = await _userManager.FindByEmailAsync(loginUserVM.Email);
                 if (user == null || user.IsDeleted)
@@ -117,9 +168,14 @@ namespace Ecom.BLL.Service.Implementation
                 }
 
                 //2- Try to sign in with email and password
-                var result = await _signInManager.CheckPasswordSignInAsync(user, loginUserVM.Password, false);
+                var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+                if (!isEmailConfirmed)
+                {
+                    return new ResponseResult<AuthResponseVM>(null, "Email is not confirmed. Please confirm your email before logging in.", false);
+                }
 
                 //3- If failed to sign in user, return error
+                var result = await _signInManager.CheckPasswordSignInAsync(user, loginUserVM.Password, false);
                 if (!result.Succeeded)
                 {
                     return new ResponseResult<AuthResponseVM>(null, "Invalid password.", false);
@@ -337,7 +393,7 @@ namespace Ecom.BLL.Service.Implementation
                     // 3. If not, create a new AppUser using info from the provider
                     string email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? Guid.NewGuid().ToString() + "@temp.com";
                     string displayName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "New User";
-                    string? uploadedImageUrl = null; // default image
+                    string? uploadedImageUrl = null; // use default image
 
                     user = new AppUser(email, displayName, uploadedImageUrl, email, null); // created by same user's email
                     user.EmailConfirmed = true;

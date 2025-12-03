@@ -1,6 +1,4 @@
 ﻿
-using Ecom.BLL.Responses;
-
 namespace Ecom.DAL.Repo.Implementation
 {
     public class AddressRepo : IAddressRepo
@@ -11,9 +9,9 @@ namespace Ecom.DAL.Repo.Implementation
         {
             _db = context;
         }
-        
+
         // Query Methods
-        public async Task<Address?> GetByIdAsync(int id, 
+        public async Task<Address?> GetByIdAsync(int id,
             params Expression<Func<Address, object>>[] includes)
         {
             try
@@ -23,7 +21,7 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
-                return await query.FirstOrDefaultAsync(a => a.Id == id);          
+                return await query.FirstOrDefaultAsync(a => a.Id == id);
             }
             catch (Exception)
             {
@@ -31,13 +29,13 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<PaginatedResult<Address>> GetAllByUserIdAsync(string userId,
+        public async Task<IEnumerable<Address>> GetAllByUserIdAsync(string userId,
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes)
         {
             try
-            {  
+            {
                 IQueryable<Address> query = _db.Addresses.Where(a => a.AppUserId == userId);
 
                 // Optional filtering
@@ -50,9 +48,6 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
-                // Count before pagination
-                int totalCount = await query.CountAsync();
-
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
@@ -61,14 +56,7 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                var items = await query.ToListAsync();
-                var result = new PaginatedResult<Address>(
-                    items,
-                    totalCount,
-                    pageNumber,
-                    pageSize
-                );
-                return result;
+                return await query.ToListAsync();
             }
             catch (Exception)
             {
@@ -76,7 +64,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<PaginatedResult<Address>> GetAllAsync(
+        public async Task<IEnumerable<Address>> GetAllAsync(
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes)
@@ -95,9 +83,6 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
-                // Count before pagination
-                int totalCount = await query.CountAsync();
-
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
@@ -106,14 +91,7 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                var items = await query.ToListAsync();
-                var result = new PaginatedResult<Address>(
-                    items,
-                    totalCount,
-                    pageNumber,
-                    pageSize
-                );
-                return result;
+                return await query.ToListAsync();
             }
             catch (Exception)
             {
@@ -161,7 +139,7 @@ namespace Ecom.DAL.Repo.Implementation
 
                 bool result = oldAddress.Update(
                     newAddress.Street, newAddress.City, newAddress.Country,
-                    newAddress.PostalCode, newAddress.UpdatedBy
+                    newAddress.PostalCode, newAddress.UpdatedBy, newAddress.Latitude ?? 0, newAddress.Longitude ?? 0
                     );
 
                 if (!result)

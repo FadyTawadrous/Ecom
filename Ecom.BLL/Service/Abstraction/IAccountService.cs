@@ -7,6 +7,7 @@ namespace Ecom.BLL.Service.Abstraction
     {
         // 1- Register
         Task<ResponseResult<AuthResponseVM>> RegisterAsync(RegisterUserVM registerVM);
+        Task<ResponseResult<bool>> ConfirmEmailAsync(string userId, string code);
 
         // 2- Login
         Task<ResponseResult<AuthResponseVM>> LoginAsync(LoginUserVM loginVM);

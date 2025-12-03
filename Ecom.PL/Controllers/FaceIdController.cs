@@ -40,7 +40,7 @@ namespace Ecom.PL.Controllers
         public async Task<IActionResult> Verify(string userId)
         {
             var result = await _faceService.VerifyFaceByUserIdAsync(userId);
-            return result.IsSuccess ? Ok(result) : NotFound(result);
+            return result.IsSuccess ? Ok(result) : Ok(new { hasFace = false });
         }
 
         [HttpPost("login")]

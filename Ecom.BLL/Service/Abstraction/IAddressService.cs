@@ -5,8 +5,8 @@ namespace Ecom.BLL.Service.Abstraction
     {
         // Get
         Task<ResponseResult<GetAddressVM>> GetByIdAsync(int id);
-        Task<ResponseResult<PaginatedResult<GetAddressVM>>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
-        Task<ResponseResult<PaginatedResult<GetAddressVM>>> GetAllByUserIdAsync(string userId,
+        Task<ResponseResult<IEnumerable<GetAddressVM>>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+        Task<ResponseResult<IEnumerable<GetAddressVM>>> GetAllByUserIdAsync(string userId,
             int pageNumber = 1, int pageSize = 10);
 
         // Create

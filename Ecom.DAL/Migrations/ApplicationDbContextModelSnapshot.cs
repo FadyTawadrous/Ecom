@@ -57,6 +57,12 @@ namespace Ecom.DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -883,7 +889,7 @@ namespace Ecom.DAL.Migrations
                     b.HasOne("Ecom.DAL.Entity.AppUser", "AppUser")
                         .WithOne("Cart")
                         .HasForeignKey("Ecom.DAL.Entity.Cart", "AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

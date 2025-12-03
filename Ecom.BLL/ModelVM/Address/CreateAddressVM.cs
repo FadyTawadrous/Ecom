@@ -9,5 +9,7 @@ namespace Ecom.BLL.ModelVM.Address
         public string? PostalCode { get; set; }
         public string? AppUserId { get; set; } = null!;
         public string? CreatedBy { get; set; } = null!;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

@@ -175,7 +175,7 @@ namespace Ecom.BLL.Mapper
             // ----------------------------------------
             CreateMap<CreateAddressVM, Address>()
                 .ConstructUsing(vm => new Address(
-                    vm.Street, vm.City, vm.Country, vm.PostalCode ?? string.Empty, vm.CreatedBy, vm.AppUserId
+                    vm.Street, vm.City, vm.Country, vm.PostalCode ?? string.Empty, vm.CreatedBy, vm.AppUserId, vm.Latitude, vm.Longitude
                 ));
 
             CreateMap<UpdateAddressVM, Address>()

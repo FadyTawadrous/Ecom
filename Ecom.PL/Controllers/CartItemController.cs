@@ -46,7 +46,7 @@ namespace Ecom.PL.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddCartItemVM model)
         {
