@@ -58,6 +58,7 @@ namespace Ecom.DAL.Repo.Implementation
                 if (pageSize <= 0) pageSize = 10;
 
                 query = query
+                    .OrderByDescending(w => w.Id)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
@@ -103,6 +104,7 @@ namespace Ecom.DAL.Repo.Implementation
                 if (pageSize <= 0) pageSize = 10;
 
                 query = query
+                    .OrderByDescending(w => w.Id)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
