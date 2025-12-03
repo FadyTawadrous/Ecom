@@ -138,7 +138,7 @@ namespace Ecom.DAL.Repo.Implementation
                     .AnyAsync(w => w.AppUserId == newItem.AppUserId && w.ProductId == newItem.ProductId);
 
                 if (exists)
-                    return true; // already exists, still return true
+                    return false; // already exists
 
                 var result = await _db.WishlistItems.AddAsync(newItem);
 

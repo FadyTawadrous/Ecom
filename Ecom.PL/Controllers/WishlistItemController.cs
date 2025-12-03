@@ -81,7 +81,7 @@ namespace Ecom.PL.Controllers
                 var result = await _wishlistItemService.CreateAsync(model);
                 if (result.IsSuccess)
                 {
-                    return Ok(result.Result); // 200 with data
+                    return Ok(result.Result); // 200 with true/false
                 }
 
                 ModelState.AddModelError(string.Empty, result.ErrorMessage);
