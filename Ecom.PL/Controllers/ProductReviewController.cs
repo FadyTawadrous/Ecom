@@ -78,9 +78,9 @@ namespace Ecom.PL.Controllers
         // --------------------------------------------------------
         // 6) POST: api/ProductReview
         // --------------------------------------------------------
-        [Authorize]// → If user should be logged in
+        //[Authorize]// → If user should be logged in
         [HttpPost]
-        public async Task<IActionResult> Create(ProductReviewCreateVM model)
+        public async Task<IActionResult> Create([FromBody] ProductReviewCreateVM model)
         {
             var response = await _reviewService.CreateAsync(CurrentUserId, model);
             if (!response.IsSuccess) return BadRequest(response);
@@ -93,7 +93,7 @@ namespace Ecom.PL.Controllers
         // --------------------------------------------------------
         //[Authorize]
         [HttpPut]
-        public async Task<IActionResult> Update(ProductReviewUpdateVM model)
+        public async Task<IActionResult> Update([FromBody] ProductReviewUpdateVM model)
         {
             var response = await _reviewService.UpdateAsync(CurrentUserId,model);
             if (!response.IsSuccess) return BadRequest(response);
