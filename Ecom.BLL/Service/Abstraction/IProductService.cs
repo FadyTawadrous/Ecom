@@ -16,6 +16,8 @@ namespace Ecom.BLL.Service.Abstraction
     {
         Task<ResponseResult<IEnumerable<GetProductVM>>> GetAllForAdminAsync();
 
+        Task<ResponseResult<IEnumerable<GetProductVM>>> GetFilteredProductsAsync(ProductFilterDto filter);
+
         Task<ResponseResult<IEnumerable<GetProductVM>>> GetAllByBrandIdAsync(int brandId);
 
         Task<ResponseResult<IEnumerable<GetProductVM>>> GetAllByCategoryIdAsync(int categoryId);

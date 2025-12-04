@@ -372,6 +372,43 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
+        public async Task<ResponseResult<IEnumerable<GetProductVM>>> GetFilteredProductsAsync(ProductFilterDto filter)
+        {
+            // Build dynamic filter expression
+            Expression<Func<Product, bool>>? filterExpression = p =>
+                (filter.MinPrice == null || p.Price >= filter.MinPrice) &&
+                (filter.MaxPrice == null || p.Price <= filter.MaxPrice) &&
+               (filter.MinRating == null || p.Rating >= (decimal)filter.MinRating) &&
+                (string.IsNullOrEmpty(filter.Search) || p.Title.Contains(filter.Search));
+
+            // Use repo flexible method
+            var products = await _productRepo.GetAllAsync(filterExpression,
+                p => p.Brand,
+                p => p.Category,
+                p => p.ProductImageUrls
+            );
+
+            // Apply sorting
+            products = ApplySorting(products, filter.SortBy);
+
+            var mapped = _mapper.Map<IEnumerable<GetProductVM>>(products);
+
+            return new ResponseResult<IEnumerable<GetProductVM>>(mapped, null, true);
+        }
+
+        private IEnumerable<Product> ApplySorting(IEnumerable<Product> products, string? sortBy)
+        {
+            return sortBy switch
+            {
+                "latest" => products.OrderByDescending(p => p.CreatedOn),
+                "price-asc" => products.OrderBy(p => p.Price),
+                "price-desc" => products.OrderByDescending(p => p.Price),
+                "rating" => products.OrderByDescending(p => p.Rating),
+                _ => products
+            };
+        }
+
+
 
     }
 

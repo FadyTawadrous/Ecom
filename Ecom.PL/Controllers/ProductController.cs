@@ -95,6 +95,13 @@ namespace Ecom.API.Controllers
             return HandleResponse(result);
         }
 
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterProducts([FromQuery] ProductFilterDto filter)
+        {
+            var result = await _productService.GetFilteredProductsAsync(filter);
+            return HandleResponse(result);
+        }
+
 
         // --------------------- Admin Endpoints -----------------------
         //[Authorize(Roles = "Admin")]
