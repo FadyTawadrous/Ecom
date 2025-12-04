@@ -50,15 +50,15 @@ namespace Ecom.PL
                             .AllowAnyMethod()
                             .AllowCredentials()
                             .WithOrigins(allowedOrigins);
-                });
+                }); 
             });
 
 
             var app = builder.Build();
 
             //Run your seeder here
-            //using (var scope = app.Services.
-            //Scope())
+            //using (var scope = app.Services.CreateScope())
+
             //{
             //    var services = scope.ServiceProvider;
             //    try
