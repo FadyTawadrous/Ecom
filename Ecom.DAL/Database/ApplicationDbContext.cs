@@ -30,5 +30,6 @@ namespace Ecom.DAL.Database
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<WishlistItem> WishlistItems { get; set; }
         public DbSet<FaceId> FaceIds { get; set; }
-        }
+        public DbSet<ProductEmbedding> ProductEmbeddings { get; set; }
+    }
 }

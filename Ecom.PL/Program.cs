@@ -1,10 +1,12 @@
 
-using Ecom.BLL.Service.Implementation;
+using Ecom.BLL.Service.Implementation.Chatbot;
 using Ecom.DAL.Entity;
 using Ecom.DAL.Seeding;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
+using System.Net;
+using System.Text.Json.Serialization;
 
 namespace Ecom.PL
 {
@@ -12,6 +14,7 @@ namespace Ecom.PL
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -28,7 +31,15 @@ namespace Ecom.PL
             //builder.Services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseInMemoryDatabase("MyDB"));
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                // Configure JSON to serialize enums as strings
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(
+                        new JsonStringEnumConverter()
+                    );
+                });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

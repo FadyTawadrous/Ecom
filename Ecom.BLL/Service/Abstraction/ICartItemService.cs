@@ -4,6 +4,7 @@ namespace Ecom.BLL.Service.Abstraction
     public interface ICartItemService
     {
         Task<ResponseResult<IEnumerable<GetCartItemVM>>> GetByCartIdAsync(int cartId);
+        Task<ResponseResult<IEnumerable<GetCartItemVM>>> GetByUserIdAsync(string userId);
         Task<ResponseResult<GetCartItemVM>> GetByIdAsync(int id);
         Task<ResponseResult<GetCartItemVM>> GetByCartIdAndProductIdAsync(int cartId, int productId);
 

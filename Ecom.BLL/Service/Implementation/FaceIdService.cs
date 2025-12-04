@@ -55,7 +55,7 @@ namespace Ecom.BLL.Service.Implementation
                 // 4) Clean up temporary file
                 File.Delete(tempFilePath);
 
-                // 5) Return encoding as double array
+                // 5) Return encoding as double array of 128 elements
                 // If no encoding found, return null
                 return enc?.GetRawEncoding();
             }
@@ -180,7 +180,7 @@ namespace Ecom.BLL.Service.Implementation
         }
 
         // Verify face for login
-        public async Task<ResponseResult<string>> VerifyFaceLoginAsync(IFormFile image)
+        public async Task<ResponseResult<AuthResponseVM>> VerifyFaceLoginAsync(IFormFile image)
         {
             try
             {
@@ -188,20 +188,20 @@ namespace Ecom.BLL.Service.Implementation
                 // If no face detected, return error response
                 var encoding = await ExtractEncoding(image);
                 if (encoding == null)
-                    return new ResponseResult<string>(null, "No face detected", false);
+                    return new ResponseResult<AuthResponseVM>(null, "No face detected", false);
 
                 // 2) Load all users with their faces
                 var users = await _faceRepo.GetAllUsersWithFacesAsync();
 
                 // 3) If no users with faces, return error response
                 if (users == null || !users.Any())
-                    return new ResponseResult<string>(null, "No users with faces in database", false);
+                    return new ResponseResult<AuthResponseVM>(null, "No users with faces in database", false);
 
                 // 4) Compare extracted encoding with each stored encoding
                 // and find the best match
                 AppUser? bestUser = null;
 
-                // Keep track of the best (smallest) distance
+                // Variable to track best (smallest) distance found
                 double bestDistance = double.MaxValue;
 
                 // 5) Iterate through each user and their face encodings
@@ -251,12 +251,19 @@ namespace Ecom.BLL.Service.Implementation
                 {
                     // Generate JWT token for the authenticated user
                     // Return success response with token
-                    var token = await _tokenService.CreateToken(bestUser);
-                    return new ResponseResult<string>(token, $"Login success (distance = {bestDistance:F4})", true);
+                    var token = await _tokenService.CreateToken(bestUser); // Generate JWT token
+                    var userVM = _mapper.Map<GetUserVM>(bestUser); // Map AppUser to GetUserVM
+                    var authResponse = new AuthResponseVM // Create AuthresponseVM
+                    {
+                        User = userVM,
+                        Token = token,
+                        TokenExpiration = DateTime.UtcNow.AddDays(7)
+                    };
+                    return new ResponseResult<AuthResponseVM>(authResponse, $"Login success (distance = {bestDistance:F4})", true);
                 }
 
                 // No good match found
-                return new ResponseResult<string>(null, $"Face not recognized (best distance = {bestDistance:F4})", false);
+                return new ResponseResult<AuthResponseVM>(null, $"Face not recognized (best distance = {bestDistance:F4})", false);
             }
             catch
             {

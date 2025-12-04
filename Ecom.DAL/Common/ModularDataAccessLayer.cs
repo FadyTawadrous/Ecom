@@ -52,6 +52,9 @@ namespace Ecom.DAL.Common
             // Face ID Repositories
             services.AddScoped<IFaceIdRepo, FaceIdRepo>();
 
+            // Product Embedding Repository
+            services.AddScoped<IProductEmbeddingRepo, ProductEmbeddingRepo>();
+
             return services;
         }
     }
