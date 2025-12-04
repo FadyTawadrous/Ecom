@@ -9,9 +9,9 @@ namespace Ecom.DAL.Repo.Implementation
         {
             _db = context;
         }
-        
+
         // Query Methods
-        public async Task<Address?> GetByIdAsync(int id, 
+        public async Task<Address?> GetByIdAsync(int id,
             params Expression<Func<Address, object>>[] includes)
         {
             try
@@ -21,7 +21,7 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
-                return await query.FirstOrDefaultAsync(a => a.Id == id);          
+                return await query.FirstOrDefaultAsync(a => a.Id == id);
             }
             catch (Exception)
             {
@@ -35,7 +35,7 @@ namespace Ecom.DAL.Repo.Implementation
             params Expression<Func<Address, object>>[] includes)
         {
             try
-            {  
+            {
                 IQueryable<Address> query = _db.Addresses.Where(a => a.AppUserId == userId);
 
                 // Optional filtering

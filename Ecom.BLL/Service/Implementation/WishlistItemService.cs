@@ -122,7 +122,7 @@ namespace Ecom.BLL.Service.Implementation
                 {
                     return new ResponseResult<bool>(true, null, true);
                 }
-                return new ResponseResult<bool>(false, "Failed to save wishlist item to the database.", false);
+                return new ResponseResult<bool>(false, "Failed to save wishlist item to the database.", true);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
@@ -79,7 +81,7 @@ namespace Ecom.PL.Controllers
                 var result = await _wishlistItemService.CreateAsync(model);
                 if (result.IsSuccess)
                 {
-                    return NoContent(); // 204
+                    return Ok(result.Result); // 200 with true/false
                 }
 
                 ModelState.AddModelError(string.Empty, result.ErrorMessage);

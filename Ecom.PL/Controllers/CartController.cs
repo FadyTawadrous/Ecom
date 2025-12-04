@@ -8,7 +8,7 @@ namespace Ecom.PL.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CartController : ControllerBase
+    public class CartController : BaseApiController
     {
         private readonly ICartService _service;
 
@@ -17,10 +17,10 @@ namespace Ecom.PL.Controllers
             _service = service;
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetByUserId(string userId)
+        [HttpGet]
+        public async Task<IActionResult> GetByUserId()
         {
-            var result = await _service.GetByUserIdAsync(userId);
+            var result = await _service.GetByUserIdAsync(CurrentUserId);
 
             if (!result.IsSuccess)
                 return NotFound(result);
