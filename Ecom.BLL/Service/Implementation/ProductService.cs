@@ -158,8 +158,9 @@ namespace Ecom.BLL.Service.Implementation
 
                 // 3. Map VM -> Entity (use ConstructUsing in AutoMapper profile)
                 var entity = _mapper.Map<Product>(model);
-                
+
                 // 4. Persist
+
                 var result = await _productRepo.AddAsync(entity);
                 if (!result)
                 {

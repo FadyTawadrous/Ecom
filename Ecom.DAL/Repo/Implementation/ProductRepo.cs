@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+
 namespace Ecom.DAL.Repo.Implementation
 {
     public class ProductRepo : IProductRepo

@@ -27,5 +27,6 @@ namespace Ecom.BLL.ModelVM.Order
         public string CustomerName { get; set; } = null!; // from User table
 
         public List<GetOrderItemVM> Items { get; set; } = new();
+
     }
 }

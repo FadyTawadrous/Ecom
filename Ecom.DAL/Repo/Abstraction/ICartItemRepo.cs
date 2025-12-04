@@ -6,6 +6,9 @@ namespace Ecom.DAL.Repo.Abstraction
         Task<IEnumerable<CartItem>> GetByCartIdAsync(int cartId,
             params Expression<Func<CartItem, object>>[] includes);
 
+        Task<IEnumerable<CartItem>> GetByUserIDAsync(string userID,
+            params Expression<Func<CartItem, object>>[] includes);
+
         Task<CartItem> GetByIdAsync(int id,
             params Expression<Func<CartItem, object>>[] includes);
         Task<CartItem> GetByCartIdAndProductIDAsync(int cartId, int productId);
