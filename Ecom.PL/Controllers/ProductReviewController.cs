@@ -78,11 +78,12 @@ namespace Ecom.PL.Controllers
         // --------------------------------------------------------
         // 6) POST: api/ProductReview
         // --------------------------------------------------------
-        //[Authorize]// → If user should be logged in
+        [Authorize]// → If user should be logged in
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductReviewCreateVM model)
         {
             var response = await _reviewService.CreateAsync(CurrentUserId, model);
+            Console.WriteLine(response.ErrorMessage);
             if (!response.IsSuccess) return BadRequest(response);
 
             return Ok(response);
@@ -91,7 +92,7 @@ namespace Ecom.PL.Controllers
         // --------------------------------------------------------
         // 7) PUT: api/ProductReview
         // --------------------------------------------------------
-        //[Authorize]
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ProductReviewUpdateVM model)
         {
@@ -102,17 +103,18 @@ namespace Ecom.PL.Controllers
         }
 
         // --------------------------------------------------------
-        // 8) PATCH: api/ProductReview/toggle/{id}
-        // --------------------------------------------------------
-        //[Authorize]
-        [HttpPatch("toggle/{id:int}")]
+    //     8) PATCH: api/ProductReview/toggle/{id
+    //}
+    //     --------------------------------------------------------
+        [Authorize]
+        [HttpDelete("toggle/{id:int}")]
         public async Task<IActionResult> ToggleDelete(int id)
         {
             // Usually userModified comes from token → User.Identity.Name
-            string? user = User?.Identity?.Name ?? "system";
+            
 
-            var response = await _reviewService.ToggleDeleteAsync(id, user);
-            if (!response.IsSuccess) return BadRequest(response);
+            var response = await _reviewService.ToggleDeleteAsync(id, this.CurrentUserId);
+            if (!response.IsSuccess) return BadRequest(new {message= response.ErrorMessage});
 
             return Ok(response);
         }
