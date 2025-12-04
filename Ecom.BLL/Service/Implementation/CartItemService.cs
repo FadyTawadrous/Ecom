@@ -202,5 +202,29 @@ namespace Ecom.BLL.Service.Implementation
                 throw;
             }
         }
+
+        public async Task<ResponseResult<IEnumerable<GetCartItemVM>>> GetByUserIdAsync(string userId)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var cartItems = await _cartItemRepo.GetByUserIDAsync(userId, c => c.Product, c => c.Cart);
+                    if (cartItems == null)
+                    {
+                        return new ResponseResult<IEnumerable<GetCartItemVM>>(null, "CartItems not found", false);
+                    }
+                    var cartItemsVM = _mapper.Map<IEnumerable<GetCartItemVM>>(cartItems);
+                    return new ResponseResult<IEnumerable<GetCartItemVM>>(cartItemsVM, "CartItems retrieved successfully", true);
+                }
+                return new ResponseResult<IEnumerable<GetCartItemVM>>(null, "Invalid UserId", false);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

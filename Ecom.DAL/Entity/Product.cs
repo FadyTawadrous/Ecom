@@ -32,7 +32,8 @@ namespace Ecom.DAL.Entity
         public virtual ICollection<WishlistItem>? WishlistItems { get; private set; }
         public virtual ICollection<ProductImageUrl>? ProductImageUrls { get; private set; }
         public virtual ICollection<ProductReview>? ProductReviews { get; private set; }
-        
+        public virtual ICollection<ProductEmbedding>? ProductEmbeddings { get; private set; }
+
 
         // Logic
         public Product() { }

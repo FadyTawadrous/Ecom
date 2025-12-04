@@ -17,6 +17,15 @@ namespace Ecom.PL.Controllers
             _service = service;
         }
 
+        [HttpGet("cart/{userId}")]
+        public async Task<IActionResult> GetByUserId(string userId)
+        {
+            var result = await _service.GetByUserIdAsync(userId);
+            if (!result.IsSuccess)
+                return NotFound(result);
+            return Ok(result);
+        }
+
         [HttpGet("cart/{cartId:int}")]
         public async Task<IActionResult> GetByCartId(int cartId)
         {

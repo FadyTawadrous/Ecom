@@ -168,5 +168,34 @@ namespace Ecom.DAL.Repo.Implementation
                 throw;
             }
         }
+
+        // Get all CartItems by UserID with optional including related entities
+        public async Task<IEnumerable<CartItem>> GetByUserIDAsync(string userID, params Expression<Func<CartItem, object>>[] includes)
+        {
+            try
+            {
+                // Build the query with includes
+                IQueryable<CartItem> query = _db.CartItems
+                                                .Where(c => c.Cart.AppUserId == userID && !c.IsDeleted);
+                // Include related entities
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+                // Execute the query to get CartItems by UserID
+                var cartItems = await query.ToListAsync();
+                if (cartItems != null)
+                {
+                    return cartItems;
+                }
+                throw new KeyNotFoundException($"No CartItems found for UserID {userID}.");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

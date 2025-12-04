@@ -188,7 +188,7 @@ namespace Ecom.BLL.Service.Implementation
                 // Else keep the existing image URL
                 if (model.Image != null)
                 {
-                    model.ImageUrl = await Upload.UploadFileAsync("File/CategoryImages", model.Image);
+                    model.ImageUrl = await Upload.UploadFileAsync("Images/CategoryImages", model.Image);
                 }
 
                 // mapping ViewModel to Entity

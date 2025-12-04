@@ -36,7 +36,7 @@ namespace Ecom.DAL.Repo.Implementation
         {
             try
             {
-                if(!string.IsNullOrEmpty(userId))
+                if (!string.IsNullOrEmpty(userId))
                 {
                     var faces = _db.FaceIds.Where(f => f.AppUserId == userId);
                     _db.FaceIds.RemoveRange(faces);
@@ -57,10 +57,10 @@ namespace Ecom.DAL.Repo.Implementation
         {
             try
             {
-                if(id > 0)
+                if (id > 0)
                 {
                     IQueryable<FaceId> query = _db.FaceIds.Where(f => f.Id == id);
-                    var face =  await query.FirstOrDefaultAsync();
+                    var face = await query.FirstOrDefaultAsync();
                     if (face != null)
                     {
                         return face;
@@ -82,7 +82,7 @@ namespace Ecom.DAL.Repo.Implementation
             try
             {
                 IQueryable<FaceId> query = _db.FaceIds.Where(f => f.AppUserId == userId);
-                
+
                 return await query.ToListAsync();
             }
             catch (Exception)
