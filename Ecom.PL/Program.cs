@@ -65,23 +65,23 @@ namespace Ecom.PL
             var app = builder.Build();
 
             //Run your seeder here
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    try
-            //    {
-            //        var context = services.GetRequiredService<ApplicationDbContext>();
-            //        var userManager = services.GetRequiredService<UserManager<AppUser>>();
-            //        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            //        Seeder.SeedAsync(context, userManager, roleManager).Wait();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        var logger = services.GetRequiredService<ILogger<Program>>();
-            //        logger.LogError(ex, "An error occurred during migration or seeding.");
-            //    }
-            //}
+                    Seeder.SeedAsync(context, userManager, roleManager).Wait();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred during migration or seeding.");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
