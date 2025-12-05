@@ -8,10 +8,14 @@ namespace Ecom.BLL.ModelVM.Product
 {
     public class ProductFilterDto
     {
+
+        public int? BrandId { get; set; }
+        public int? CategoryId { get; set; }
+
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public double? MinRating { get; set; }
         public string? Search { get; set; }
-        public string? SortBy { get; set; } // "latest", "price-asc", "price-desc", etc.
+       
     }
 }
