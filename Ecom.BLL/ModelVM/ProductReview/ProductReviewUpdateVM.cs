@@ -12,6 +12,9 @@ namespace Ecom.BLL.ModelVM.ProductReview
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public decimal Rating { get; set; }
+
+        public int ProductId { get; set; }
+        public string? AppUserId { get; set; } = null!;
         public string UpdatedBy { get; set; } = "system";
     }
 }
