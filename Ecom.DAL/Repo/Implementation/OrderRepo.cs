@@ -26,7 +26,7 @@ namespace Ecom.DAL.Repo.Implementation
 
         public async Task<IEnumerable<Order>> GetAllAsync(Expression<Func<Order, bool>>? filter = null)
         {
-            IQueryable<Order> query = _context.Orders;
+            IQueryable<Order> query = _context.Orders.Include(o => o.AppUser);
             if (filter != null)
                 query = query.Where(filter);
             return await query.ToListAsync();
